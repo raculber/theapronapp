@@ -1,12 +1,17 @@
-import './App.css';
+import SignIn from "./components/SignIn/SignIn";
+
+import { Route, Switch, Redirect } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>Hello capstone</p>
-      </header>
-    </div>
+    <Switch>
+      <Route path="/" exact>
+        <Redirect to="/sign-in" />
+      </Route>
+      <Route path="/sign-in">
+        <SignIn />
+      </Route>
+    </Switch>
   );
 }
 
