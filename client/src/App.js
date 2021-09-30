@@ -4,6 +4,7 @@ import SignUp from "./components/Auth/SignUp";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 
+// App component
 function App() {
   return (
     <Switch>
