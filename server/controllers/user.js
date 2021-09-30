@@ -2,22 +2,24 @@ import express from "express";
 
 import User from "../models/user.js";
 
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
 export const createUser = async (req, res) => {
-  const { username, email, password, reenteredPassword } = req.body;
-  const findUser = User.findOne({ username });
-  const findEmail = User.findOne({ email });
+  console.log(req.body);
+  const { enteredUser, enteredEmail, enteredPassword, reenteredPassword } =
+    req.body;
+  const findUser = User.findOne({ enteredUser });
+  const findEmail = User.findOne({ enteredEmail });
 
   if (findUser || findEmail) return res.send("Email already exists");
-  else if (password !== reenteredPassword)
+  else if (enteredPassword !== reenteredPassword)
     return res.send("Passwords must match");
   else {
     try {
-      const securedPass = await bcrypt.hash(password, 12);
-      const User = new User({ username, email, securedPass });
+      const securedPass = await bcrypt.hash(enteredPassword, 12);
+      const User = new User({ enteredUser, enteredEmail, securedPass });
       User.save();
       res.send("Success");
     } catch (error) {
