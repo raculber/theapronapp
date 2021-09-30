@@ -11,7 +11,7 @@ function App() {
       <Route path="/" exact>
         <Redirect to="/sign-in" />
       </Route>
-      <Route path="/sign-in" eact>
+      <Route path="/sign-in" exact>
         <SignIn />
       </Route>
       <Route path="/sign-up" exact>
