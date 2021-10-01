@@ -4,6 +4,7 @@ import User from "../models/user.js";
 
 import bcrypt from "bcrypt";
 import emailValidator from "email-validator";
+import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
 
@@ -30,8 +31,9 @@ export const createUser = async (req, res) => {
     return res.json({ message: "Password must be at least six characters" });
   else {
     try {
+      const userId = uuidv4();
       const securedPass = await bcrypt.hash(enteredPassword, 12);
-      const User = new User({ enteredUser, enteredEmail, securedPass });
+      const User = new User({ userId, enteredUser, enteredEmail, securedPass });
       User.save();
       res.json({ message: "Success" });
     } catch (error) {

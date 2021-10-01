@@ -2,6 +2,7 @@ import { addUser } from "./auth-slice";
 import axios from "axios";
 
 export const sendUserData = (userData) => {
+  console.log(userData);
   return (dispatch) => {
     axios
       .post("http://localhost:3001/api/sign-up", userData)
