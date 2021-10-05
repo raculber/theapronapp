@@ -5,24 +5,20 @@ import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import emailValidator from "email-validator";
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
 export const createUser = async (req, res) => {
-  console.log(req.body);
-  const { enteredUser, enteredEmail, enteredPassword, reenteredPass } =
-    req.body;
+  let { enteredEmail, enteredPassword, reenteredPass } = req.body;
 
-  enteredUser = enteredUser.trim();
   enteredEmail = enteredEmail.trim();
   enteredPassword = enteredPassword.trim();
   reenteredPass = reenteredPass.trim();
 
-  const findUser = User.findOne({ username: enteredUser });
-  const findEmail = User.findOne({ email: enteredEmail });
+  const findEmail = await User.exists({ email: enteredEmail });
 
-  if (findUser.username || findEmail.enteredEmail)
-    return res.json({ message: "User already exists" });
+  if (findEmail) return res.json({ message: "User already exists" });
   else if (enteredPassword !== reenteredPass)
     return res.json({ message: "Passwords must match" });
   else if (!emailValidator.validate(enteredEmail))
@@ -33,13 +29,33 @@ export const createUser = async (req, res) => {
     try {
       const userId = uuidv4();
       const securedPass = await bcrypt.hash(enteredPassword, 12);
-      const User = new User({ userId, enteredUser, enteredEmail, securedPass });
-      User.save();
-      res.json({ message: "Success" });
+
+      console.log(userId);
+      console.log(securedPass);
+      const user = new User({
+        userId: userId,
+        email: enteredEmail,
+        password: securedPass,
+      });
+      await user.save();
+      const accessToken = jwt.sign(
+        { email: enteredEmail, userId: userId },
+        process.env.TOKEN_KEY
+      );
+
+      res.json({
+        token: accessToken,
+      });
     } catch (error) {
       res.json({ message: error });
     }
   }
 };
 
+export const signInUser = async (req, res) => {
+  let { enteredEmail, enteredPassword } = req.body;
+
+  enteredEmail = enteredEmail.trim();
+  enteredPassword = enteredPassword.trim();
+};
 export default router;

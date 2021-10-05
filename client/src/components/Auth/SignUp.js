@@ -4,27 +4,22 @@ import { sendUserData } from "../../store/auth-actions";
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const userRef = useRef("");
   const emailRef = useRef("");
   const passRef = useRef("");
   const reenteredPassRef = useRef("");
 
-  const SignUp = (event) => {
+  const validateSignUp = (event) => {
     event.preventDefault();
     const userInfo = {
-      enteredUser: userRef.current,
-      enteredEmail: emailRef.current,
-      enteredPassword: passRef.current,
-      reenteredPass: reenteredPassRef.current,
+      enteredEmail: emailRef.current.value,
+      enteredPassword: passRef.current.value,
+      reenteredPass: reenteredPassRef.current.value,
     };
     dispatch(sendUserData(userInfo));
   };
+
   return (
-    <form onSubmit={SignUp}>
-      <label htmlFor="username" id="username">
-        Username
-      </label>
-      <input ref={useRef} type="text" id="username"></input>
+    <form onSubmit={validateSignUp}>
       <label htmlFor="email" id="email">
         Email
       </label>
