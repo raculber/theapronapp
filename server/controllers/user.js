@@ -30,24 +30,22 @@ export const createUser = async (req, res) => {
       const userId = uuidv4();
       const securedPass = await bcrypt.hash(enteredPassword, 12);
 
-      console.log(userId);
-      console.log(securedPass);
       const user = new User({
         userId: userId,
         email: enteredEmail,
         password: securedPass,
       });
-      await user.save();
-      const accessToken = jwt.sign(
-        { email: enteredEmail, userId: userId },
-        process.env.TOKEN_KEY
-      );
+      console.log(user);
+      user.save();
+      console.log("saved");
+      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
 
       res.json({
         token: accessToken,
+        result: { userId, enteredEmail },
       });
     } catch (error) {
-      res.json({ message: error });
+      res.status(500).json({ message: error });
     }
   }
 };
@@ -57,5 +55,23 @@ export const signInUser = async (req, res) => {
 
   enteredEmail = enteredEmail.trim();
   enteredPassword = enteredPassword.trim();
+
+  const user = await User.findOne({ email: enteredEmail });
+  const userId = user.userId;
+
+  if (!userId) return res.json({ message: "User does not exist" });
+  else {
+    const validPass = await bcrypt.compare(enteredPassword, user.password);
+    if (validPass) {
+      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
+
+      res.json({
+        token: accessToken,
+        result: { userId, enteredEmail },
+      });
+    } else {
+      res.json({ message: "Invalid login" });
+    }
+  }
 };
 export default router;

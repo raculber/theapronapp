@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
-import { sendUserData } from "../../store/auth-actions";
+import { signUp } from "../../store/auth-actions";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -13,9 +13,9 @@ const SignUp = () => {
     const userInfo = {
       enteredEmail: emailRef.current.value,
       enteredPassword: passRef.current.value,
-      reenteredPass: reenteredPassRef.current.value,
+      reenteredPassRef: reenteredPassRef.current.value,
     };
-    dispatch(sendUserData(userInfo));
+    dispatch(signUp(userInfo));
   };
 
   return (
@@ -27,11 +27,11 @@ const SignUp = () => {
       <label htmlFor="password" id="password">
         Password
       </label>
-      <input ref={passRef} type="text" id="password"></input>
+      <input ref={passRef} type="password" id="password"></input>
       <label htmlFor="passwordretype" id="passwordretype">
-        Re-Enter Password
+        Confirm Password
       </label>
-      <input ref={reenteredPassRef} type="text" id="passwordretype"></input>
+      <input ref={reenteredPassRef} type="password" id="passwordretype"></input>
       <button type="submit">Create Account</button>
     </form>
   );
