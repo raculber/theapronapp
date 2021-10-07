@@ -1,8 +1,11 @@
 import { useDispatch } from "react-redux";
 import { useRef } from "react";
 import { signIn } from "../../store/auth-actions";
+import { useHistory } from "react-router";
+import axios from "axios";
 
 const SignIn = () => {
+  const history = useHistory;
   const dispatch = useDispatch();
   const emailRef = useRef("");
   const passRef = useRef("");
@@ -13,6 +16,19 @@ const SignIn = () => {
       enteredPassword: passRef.current.value,
     };
     dispatch(signIn(userInfo));
+    axios
+      .get("http://localhost:3001/api/auth", {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log("success!");
+        history.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

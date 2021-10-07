@@ -10,16 +10,16 @@ import jwt from "jsonwebtoken";
 const router = express.Router();
 
 export const createUser = async (req, res) => {
-  let { enteredEmail, enteredPassword, reenteredPass } = req.body;
+  let { enteredEmail, enteredPassword, reenteredPassword } = req.body;
 
-  enteredEmail = enteredEmail.trim();
-  enteredPassword = enteredPassword.trim();
-  reenteredPass = reenteredPass.trim();
+  if (enteredEmail) enteredEmail = enteredEmail.trim();
+  if (enteredPassword) enteredPassword = enteredPassword.trim();
+  if (reenteredPassword) reenteredPassword = reenteredPassword.trim();
 
   const findEmail = await User.exists({ email: enteredEmail });
 
   if (findEmail) return res.json({ message: "User already exists" });
-  else if (enteredPassword !== reenteredPass)
+  else if (enteredPassword !== reenteredPassword)
     return res.json({ message: "Passwords must match" });
   else if (!emailValidator.validate(enteredEmail))
     return res.json({ message: "Invalid email" });
@@ -35,9 +35,7 @@ export const createUser = async (req, res) => {
         email: enteredEmail,
         password: securedPass,
       });
-      console.log(user);
       user.save();
-      console.log("saved");
       const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
 
       res.json({
@@ -73,5 +71,9 @@ export const signInUser = async (req, res) => {
       res.json({ message: "Invalid login" });
     }
   }
+};
+
+export const verifyToken = async (req, res) => {
+  res.json({ message: "User Authenticated" });
 };
 export default router;

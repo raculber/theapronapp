@@ -7,10 +7,12 @@ export const signUp = (userData) => {
     axios
       .post("http://localhost:3001/api/sign-up", userData)
       .then((res) => {
-        console.log(res);
         if (res.data.token) {
           dispatch(
-            addUser({ userId: res.result.userId, email: res.result.email })
+            addUser({
+              userId: res.data.result.userId,
+              email: res.data.result.email,
+            })
           );
           localStorage.setItem("token", res.data.token);
         } else {
@@ -29,8 +31,12 @@ export const signIn = (userData) => {
         console.log(res);
         if (res.data.token) {
           dispatch(
-            addUser({ userId: res.result.userId, email: res.result.email })
+            addUser({
+              userId: res.data.result.userId,
+              email: res.data.result.email,
+            })
           );
+          dispatch(sendNotification({ message: "Login Successful" }));
           localStorage.setItem("token", res.data.token);
         } else {
           dispatch(sendNotification({ message: "Login Failed" }));

@@ -12,7 +12,6 @@ app.use(express.json());
 app.use("/", userRoutes);
 
 const PORT = process.env.PORT;
-mongoose.set("debug", true);
 
 mongoose
   .connect(process.env.MONGODB_URL, {

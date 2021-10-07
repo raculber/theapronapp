@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-mongoose.set("debug", true);
 
 const userSchema = new Schema({
   userId: {
