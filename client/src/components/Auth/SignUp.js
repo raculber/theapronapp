@@ -26,6 +26,7 @@ const SignUp = () => {
         },
       })
       .then((res) => {
+        console.log(res);
         console.log("success!");
         history.push("/");
       })

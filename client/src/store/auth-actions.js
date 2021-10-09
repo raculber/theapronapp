@@ -28,7 +28,6 @@ export const signIn = (userData) => {
     axios
       .post("http://localhost:3001/api/sign-in", userData)
       .then((res) => {
-        console.log(res);
         if (res.data.token) {
           dispatch(
             addUser({

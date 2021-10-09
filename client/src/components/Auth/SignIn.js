@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import axios from "axios";
 
 const SignIn = () => {
-  const history = useHistory;
+  const history = useHistory();
   const dispatch = useDispatch();
   const emailRef = useRef("");
   const passRef = useRef("");
@@ -23,7 +23,6 @@ const SignIn = () => {
         },
       })
       .then((res) => {
-        console.log("success!");
         history.push("/");
       })
       .catch((err) => {

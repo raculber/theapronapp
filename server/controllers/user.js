@@ -55,10 +55,10 @@ export const signInUser = async (req, res) => {
   enteredPassword = enteredPassword.trim();
 
   const user = await User.findOne({ email: enteredEmail });
-  const userId = user.userId;
 
-  if (!userId) return res.json({ message: "User does not exist" });
+  if (user == null) return res.json({ message: "User does not exist" });
   else {
+    const userId = user.userId;
     const validPass = await bcrypt.compare(enteredPassword, user.password);
     if (validPass) {
       const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
