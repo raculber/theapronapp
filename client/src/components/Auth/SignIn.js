@@ -15,6 +15,7 @@ const SignIn = () => {
       enteredEmail: emailRef.current.value,
       enteredPassword: passRef.current.value,
     };
+
     dispatch(signIn(userInfo));
     axios
       .get("http://localhost:3001/api/auth", {
@@ -23,8 +24,10 @@ const SignIn = () => {
         },
       })
       .then((res) => {
+        console.log(res);
         history.push("/");
       })
+      //Use this code block if user not authenticated
       .catch((err) => {
         console.log(err);
       });

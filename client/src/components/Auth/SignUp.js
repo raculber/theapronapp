@@ -19,6 +19,7 @@ const SignUp = () => {
       reenteredPassword: reenteredPassRef.current.value,
     };
     dispatch(signUp(userInfo));
+    console.log(localStorage.getItem("token"));
     axios
       .get("http://localhost:3001/api/auth", {
         headers: {
@@ -30,6 +31,7 @@ const SignUp = () => {
         console.log("success!");
         history.push("/");
       })
+      //Use this code block if user not authenticated
       .catch((err) => {
         console.log(err);
       });

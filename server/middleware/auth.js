@@ -3,18 +3,23 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const auth = async (req, res, next) => {
-  try {
-    const token = req.headers["access-token"];
-
-    if (token) {
-      const tokenData = jwt.verify(token, process.env.TOKEN_KEY);
-      req.userId = tokenData?.userId;
-      if (tokenData) next();
-      else res.status(401).send({ message: "User not authenticated" });
-    } else {
-      res.status(401).send({ message: "User not authenticated" });
-    }
-  } catch (error) {}
+  const token = req.headers["access-token"];
+  console.log(token);
+  console.log("Testing auth");
+  if (token) {
+    const tokenData = jwt.verify(
+      token,
+      process.env.TOKEN_KEY,
+      (err, decoded) => {
+        if (err) {
+          res.status(401).json({ message: "User not authenticated" });
+        } else {
+          req.userId = decoded.userId;
+          next();
+        }
+      }
+    );
+  }
 };
 
 export default auth;
