@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { useRef } from "react";
-import { signIn } from "../../store/auth-actions";
+import { useRef, useState, useEffect } from "react";
+import { addUser } from "../../store/auth-slice";
 import { useHistory } from "react-router";
 import axios from "axios";
 
@@ -9,28 +9,52 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const emailRef = useRef("");
   const passRef = useRef("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+    if (token !== "") {
+      axios
+        .get("http://localhost:3001/api/auth", {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          history.push("/");
+        })
+        //Use this code block if user not authenticated
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [token, history]);
+
   const validateSignIn = (event) => {
     event.preventDefault();
     const userInfo = {
       enteredEmail: emailRef.current.value,
       enteredPassword: passRef.current.value,
     };
-
-    dispatch(signIn(userInfo));
     axios
-      .get("http://localhost:3001/api/auth", {
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
+      .post("http://localhost:3001/api/sign-in", userInfo)
       .then((res) => {
-        console.log(res);
-        history.push("/");
+        // res.data.message will contain necessary info about why
+        // sign up/in failed
+        if (res.data.message) {
+          // Handler server error in this code block
+        } else if (res.data.token) {
+          dispatch(
+            addUser({
+              userId: res.data.result.userId,
+              email: res.data.result.email,
+            })
+          );
+          setToken(res.data.token);
+        }
       })
-      //Use this code block if user not authenticated
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -4,8 +4,6 @@ dotenv.config();
 
 const auth = async (req, res, next) => {
   const token = req.headers["access-token"];
-  console.log(token);
-  console.log("Testing auth");
   if (token) {
     const tokenData = jwt.verify(
       token,

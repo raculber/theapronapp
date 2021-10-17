@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { signUp } from "../../store/auth-actions";
 import { useHistory } from "react-router";
+import { addUser } from "../../store/auth-slice";
 import axios from "axios";
 
 const SignUp = () => {
@@ -10,6 +10,27 @@ const SignUp = () => {
   const emailRef = useRef("");
   const passRef = useRef("");
   const reenteredPassRef = useRef("");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+    if (token !== "") {
+      axios
+        .get("http://localhost:3001/api/auth", {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          history.push("/");
+        })
+        //Use this code block if user not authenticated
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [token, history]);
 
   const validateSignUp = (event) => {
     event.preventDefault();
@@ -18,23 +39,24 @@ const SignUp = () => {
       enteredPassword: passRef.current.value,
       reenteredPassword: reenteredPassRef.current.value,
     };
-    dispatch(signUp(userInfo));
-    console.log(localStorage.getItem("token"));
     axios
-      .get("http://localhost:3001/api/auth", {
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
+      .post("http://localhost:3001/api/sign-up", userInfo)
       .then((res) => {
-        console.log(res);
-        console.log("success!");
-        history.push("/");
+        // res.data.message will contain necessary info about why
+        // sign up/in failed
+        if (res.data.message) {
+          // Handler server error in this code block
+        } else if (res.data.token) {
+          dispatch(
+            addUser({
+              userId: res.data.result.userId,
+              email: res.data.result.email,
+            })
+          );
+          setToken(res.data.token);
+        }
       })
-      //Use this code block if user not authenticated
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
   };
 
   return (
