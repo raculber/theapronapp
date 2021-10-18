@@ -36,7 +36,9 @@ export const createUser = async (req, res) => {
         password: securedPass,
       });
       user.save();
-      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
+      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY, {
+        expiresIn: "24hr",
+      });
 
       res.json({
         token: accessToken,
@@ -61,7 +63,9 @@ export const signInUser = async (req, res) => {
     const userId = user.userId;
     const validPass = await bcrypt.compare(enteredPassword, user.password);
     if (validPass) {
-      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY);
+      const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY, {
+        expiresIn: "24hr",
+      });
 
       res.json({
         token: accessToken,
