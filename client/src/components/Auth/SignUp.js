@@ -44,13 +44,14 @@ const SignUp = () => {
       .then((res) => {
         // res.data.message will contain necessary info about why
         // sign up/in failed
+        console.log(res);
         if (res.data.message) {
           // Handler server error in this code block
         } else if (res.data.token) {
           dispatch(
             addUser({
               userId: res.data.result.userId,
-              email: res.data.result.email,
+              email: res.data.result.enteredEmail,
             })
           );
           setToken(res.data.token);
