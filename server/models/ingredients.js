@@ -5,7 +5,6 @@ const ingredientsSchema = new Schema({
   userId: {
     type: String,
     required: true,
-    unique: true,
   },
   ingredients: [
     {

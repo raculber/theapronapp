@@ -3,19 +3,11 @@ import axios from "axios";
 
 const Pantry = () => {
   const userId = useSelector((state) => state.user.userId);
+  console.log(userId);
 
   const addIngredient = () => {
-    //Retrieve searched for ingredient
-    // axios
-    //   .get(
-    //     "https://api.spoonacular.com/food/ingredients/search?apiKey=" +
-    //       process.env.REACT_APP_API_KEY +
-    //       "&query=broccoli"
-    //   )
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
     //Send ingredient to database
+    //Replace ingredientId with correct id
     axios
       .post("http://localhost:3001/api/add-ingredient", {
         userId: userId,
