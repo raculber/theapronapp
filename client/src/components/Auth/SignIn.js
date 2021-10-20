@@ -48,7 +48,7 @@ const SignIn = () => {
           dispatch(
             addUser({
               userId: res.data.result.userId,
-              email: res.data.result.email,
+              email: res.data.result.enteredEmail,
             })
           );
           setToken(res.data.token);
@@ -58,17 +58,19 @@ const SignIn = () => {
   };
 
   return (
-    <form onSubmit={validateSignIn}>
-      <label htmlFor="email" id="email">
-        Email
-      </label>
-      <input type="text" id="email" ref={emailRef}></input>
-      <label htmlFor="password" id="password">
-        Password
-      </label>
-      <input type="password" id="password" ref={passRef}></input>
-      <button>Sign In</button>
-    </form>
+    <div>
+      <form onSubmit={validateSignIn}>
+        <label htmlFor="email" id="email">
+          Email
+        </label>
+        <input type="text" id="email" ref={emailRef}></input>
+        <label htmlFor="password" id="password">
+          Password
+        </label>
+        <input type="password" id="password" ref={passRef}></input>
+        <button>Sign In</button>
+      </form>
+    </div>
   );
 };
 
