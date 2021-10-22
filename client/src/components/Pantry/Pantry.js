@@ -5,13 +5,13 @@ const Pantry = () => {
   const userId = useSelector((state) => state.user.userId);
   console.log(userId);
 
-  const addIngredient = () => {
-    //Send ingredient to database
-    //Replace ingredientId with correct id
+  const removeIngredient = () => {
     axios
-      .post("http://localhost:3001/api/add-ingredient", {
-        userId: userId,
-        ingredientId: 11090,
+      .delete("http://localhost:3001/api/delete-ingredient", {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+        data: { userId: userId, ingredientId: 5006 },
       })
       .then((res) => {
         console.log(res);
@@ -20,7 +20,47 @@ const Pantry = () => {
         console.log(err);
       });
   };
-  return <button onClick={addIngredient}>Add Ingredient</button>;
+
+  const getIngredients = () => {
+    axios
+      .get("http://localhost:3001/api/get-ingredients?userId=" + userId, {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const addIngredient = () => {
+    //Send ingredient to database
+    //Replace ingredientId with correct id
+    axios
+      .post("http://localhost:3001/api/add-ingredient", {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+        userId: userId,
+        ingredientId: 5006,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  return (
+    <div>
+      <button onClick={addIngredient}>Add Ingredient</button>
+      <button onClick={getIngredients}>Get Ingredients</button>
+      <button onClick={removeIngredient}>Remove Ingredient</button>
+    </div>
+  );
 };
 
 export default Pantry;
