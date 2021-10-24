@@ -19,20 +19,14 @@ export const deleteIngredient = async (req, res) => {
   if (ingredient) {
     console.log("exist");
     console.log(ingredient.ingredients);
-    // ingredient.ingredients.pull({ id: ingredientId });
-    // console.log(ingredient.ingredients);
-    // ingredient.save();
-    // ingredient.update({ $pull: { id: ingredientId } });
-    Ingredients.updateOne(
+    await Ingredients.updateOne(
       {
         userId: userId,
-        ingredients: {
-          $elemMatch: { id: ingredientId },
-        },
       },
-      { $pullAll: { id: ingredientId } }
+      { $pull: { ingredients: { id: ingredientId } } }
     );
-    console.log(ingredient.ingredients);
+    res.json({ message: "Ingredient deleted" });
+    // ingredient.save();
   } else res.json({ message: "Ingredient not found" });
 };
 
@@ -46,8 +40,7 @@ export const getIngredients = async (req, res) => {
 };
 
 export const addIngredient = async (req, res) => {
-  console.log("In adding");
-  let { userId, ingredientId } = req.body;
+  let { userId, ingredientId, ingredientName } = req.body;
   const ingredientExists = await Ingredients.exists({
     userId: userId,
     ingredients: {
@@ -64,14 +57,20 @@ export const addIngredient = async (req, res) => {
     if (userIngredients == null) {
       userIngredients = new Ingredients({
         userId: userId,
-        ingredients: [{ id: ingredientId }],
+        ingredients: [{ id: ingredientId, name: ingredientName }],
       });
-    } else userIngredients.ingredients.push({ id: ingredientId });
+    } else
+      userIngredients.ingredients.push({
+        id: ingredientId,
+        name: ingredientName,
+      });
     userIngredients.save();
 
     res.status(200).json({
       data: {
         ingredientId: ingredientId,
+        ingredientName,
+        ingredientName,
       },
     });
   } else {

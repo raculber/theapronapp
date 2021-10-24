@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const auth = async (req, res, next) => {
-  const token = req.headers["access-token"];
+  let token = "";
+  if (req.headers["access-token"]) token = req.headers["access-token"];
+  else token = req.body.headers["access-token"];
   if (token) {
     const tokenData = jwt.verify(
       token,
