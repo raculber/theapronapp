@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { useState, Fragment } from "react";
+import RecipeModal from "./RecipeModal";
+
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -896,7 +897,7 @@ const ExpandMore = styled((props) => {
 
 const RecipeCard = (props) => {
   const [expanded, setExpanded] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
   const [recipe, setRecipe] = useState(recipeData);
 
   //   const getRecipe = useCallback(() => {
@@ -923,55 +924,62 @@ const RecipeCard = (props) => {
 
   modifiedSummary = modifiedSummary.replace(/<\/?[^>]+(>|$)/g, "");
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleDisplayModal = () => {
+    setShowModal(!showModal);
   };
-
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardHeader
-        action={
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-        }
-        title={recipe.title ? recipe.title : "No title"}
-        subheader={
-          "Servings: " +
-          recipe.servings +
-          " Calories: " +
-          recipe.nutrition.nutrients[0].amount
-        }
-      />
-      <CardMedia
-        component="img"
-        height="150"
-        image={recipe.image}
-        alt={recipe.title ? recipe.title : "No title"}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {modifiedSummary}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        {recipe.instructions && (
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
-        )}
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+    <Fragment>
+      <Card
+        sx={{ maxWidth: 345, cursor: "pointer" }}
+        onClick={handleDisplayModal}
+      >
+        <CardHeader
+          action={
+            <IconButton aria-label="Save recipe">
+              <FavoriteIcon style={{ color: "8B0000", cursor: "pointer" }} />
+            </IconButton>
+          }
+          title={recipe.title ? recipe.title : "No title"}
+          subheader={
+            recipe.servings && recipe.nutrition.nutrients[0].amount
+              ? "Servings: " +
+                recipe.servings +
+                " Calories: " +
+                Math.round(recipe.nutrition.nutrients[0].amount)
+              : ""
+          }
+        />
+        <CardMedia
+          component="img"
+          height="150"
+          image={recipe.image}
+          alt={recipe.title ? recipe.title : "No title"}
+        />
         <CardContent>
-          <Typography paragraph>{recipe.instructions}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {modifiedSummary}
+          </Typography>
         </CardContent>
-      </Collapse>
-    </Card>
+        <CardActions disableSpacing>
+          {recipe.instructions && (
+            <ExpandMore
+              expand={expanded}
+              onClick={handleDisplayModal}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          )}
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography paragraph>{recipe.instructions}</Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
+      {showModal && <RecipeModal onClose={handleDisplayModal} />}
+    </Fragment>
   );
 };
 
