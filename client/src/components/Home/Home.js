@@ -5,7 +5,6 @@ const Home = () => {
 
   return (
     <div>
-      <h1>{userEmail}</h1>
       <RecipeCard id="715594" />
     </div>
   );

@@ -28,6 +28,7 @@ const SignUp = () => {
         //Use this code block if user not authenticated
         .catch((err) => {
           console.log(err);
+          
         });
     }
   }, [token, history]);
