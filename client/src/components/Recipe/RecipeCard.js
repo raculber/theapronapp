@@ -1,4 +1,5 @@
 import { useState, Fragment } from "react";
+import { useSelector } from "react-redux";
 import RecipeModal from "./RecipeModal";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
@@ -15,6 +16,7 @@ import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
 
 import recipe from "./recipe";
+import axios from "axios";
 
 const recipeData = recipe;
 
@@ -33,7 +35,8 @@ const RecipeCard = (props) => {
   const [expanded, setExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [recipe, setRecipe] = useState(recipeData);
-  console.log(showModal);
+
+  const userId = useSelector((state) => state.user.userId);
 
   //   const getRecipe = useCallback(() => {
   //     axios
@@ -60,12 +63,36 @@ const RecipeCard = (props) => {
   modifiedSummary = modifiedSummary.replace(/<\/?[^>]+(>|$)/g, "");
   var linebreak = "\n";
 
+  const recipeSaveHandler = () => {
+    console.log("Saving");
+    axios.post("http://localhost:3001/api/save-recipe", {
+      userId: userId,
+      id: recipe.id,
+      title: recipe.title,
+      ingredients: recipe.extendedIngredients,
+      vegan: recipe.vegan,
+      vegetarian: recipe.vegetarian,
+      glutenFree: recipe.glutenFree,
+      dairyFree: recipe.dairyFree,
+      veryHealthy: recipe.veryHealthy,
+      cheap: recipe.cheap,
+      summary: recipe.summary,
+      image: recipe.image,
+      instructions: recipe.analyzedInstructions[0].steps,
+      readyInMinutes: recipe.readyInMinutes,
+      nutrients: recipe.nutrition.nutrients,
+      headers: {
+        "access-token": localStorage.getItem("token"),
+      },
+    });
+  };
   const hideModalHandler = () => {
     setShowModal(false);
   };
 
-  const showModalHandler = () => {
-    setShowModal(true);
+  const showModalHandler = (event) => {
+    //Do not display modal if user clicked "save"
+    if (event.target.tagName != "path") setShowModal(true);
   };
   return (
     <Fragment>
@@ -83,7 +110,7 @@ const RecipeCard = (props) => {
       >
         <CardHeader
           action={
-            <IconButton aria-label="Save recipe">
+            <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
               <FavoriteIcon style={{ color: "8B0000", cursor: "pointer" }} />
             </IconButton>
           }

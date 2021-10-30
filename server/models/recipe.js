@@ -10,7 +10,7 @@ const recipeSchema = new Schema({
     type: String,
     required: true,
   },
-  name: {
+  title: {
     type: String,
     required: true,
   },
@@ -20,6 +20,15 @@ const recipeSchema = new Schema({
       name: String,
       amount: Number,
       unit: String,
+    },
+  ],
+  nutrients: [
+    {
+      name: String,
+      title: String,
+      amount: Number,
+      unit: String,
+      percentOfDailyNeeds: Number,
     },
   ],
   vegetarian: Boolean,

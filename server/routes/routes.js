@@ -8,6 +8,7 @@ import {
   getIngredients,
   deleteIngredient,
 } from "../controllers/ingredients.js";
+import { saveRecipe } from "../controllers/recipe.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.get("/api/auth", auth, verifyToken);
 router.get("/api/get-ingredients", auth, getIngredients);
 router.post("/api/add-ingredient", auth, addIngredient);
 router.delete("/api/delete-ingredient", auth, deleteIngredient);
+
+router.post("/api/save-recipe", auth, saveRecipe);
 
 export default router;
