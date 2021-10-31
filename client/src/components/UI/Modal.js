@@ -12,7 +12,11 @@ const ModalOverlay = (props) => {
   return (
     <div className={classes.modal}>
       <IconButton
-        sx={{ position: "absolute", top: 10, right: 10 }}
+        sx={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+        }}
         onClick={props.onClose}
       >
         <CloseIcon sx={{ width: 40, height: 40 }} />

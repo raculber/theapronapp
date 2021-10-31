@@ -1,4 +1,6 @@
 import Typography from "@mui/material/Typography";
+import classes from "./RecipeModal.module.css";
+import IngredientsTable from "./IngredientsTable";
 
 import Modal from "../UI/Modal";
 const RecipeModal = (props) => {
@@ -15,18 +17,11 @@ const RecipeModal = (props) => {
   let modifiedSummary = props.recipe.summary ? props.recipe.summary : null;
 
   modifiedSummary = modifiedSummary.replace(/<\/?[^>]+(>|$)/g, "");
-  console.log(props.recipe);
   return (
     <Modal onClose={props.onClose}>
       <Typography variant="h5" style={{ margin: 10 }}>
         {props.recipe.title}
       </Typography>
-      <img
-        src={props.recipe.image}
-        style={{ margin: 10 }}
-        alt={props.recipe.title}
-        title={props.recipe.title}
-      />
       <Typography
         paragraph
         style={{ margin: 10, fontSize: 20, color: "#808080" }}
@@ -35,10 +30,39 @@ const RecipeModal = (props) => {
         {" " + Math.round(props.recipe.nutrition.nutrients[0].amount) + " "}
         Ready In: {" " + Math.round(props.recipe.readyInMinutes) + " minutes"}
       </Typography>
-      <Typography paragraph style={{ margin: 10 }}>
-        {modifiedSummary}
+      <div className={classes.imageAndSummary}>
+        <img
+          src={props.recipe.image}
+          style={{ margin: 10 }}
+          alt={props.recipe.title}
+          title={props.recipe.title}
+        />
+        <div className={classes.summary}>
+          <Typography
+            paragraph
+            style={{ margin: 10, fontSize: 20, color: "#808080" }}
+          >
+            Summary:
+          </Typography>
+          <Typography paragraph style={{ margin: 10 }}>
+            {modifiedSummary}
+          </Typography>
+        </div>
+      </div>
+      <Typography
+        paragraph
+        style={{ margin: 10, fontSize: 20, color: "#808080" }}
+      >
+        Ingredients:
       </Typography>
-      {recipeInstructions}
+      <IngredientsTable recipe={props.recipe} />
+      <Typography
+        paragraph
+        style={{ margin: 10, fontSize: 20, color: "#808080" }}
+      >
+        Instructions:
+      </Typography>
+      <Typography paragraph>{recipeInstructions}</Typography>
     </Modal>
   );
 };

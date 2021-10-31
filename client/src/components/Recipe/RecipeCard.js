@@ -24,8 +24,6 @@ const RecipeCard = (props) => {
   const userId = useSelector((state) => state.user.userId);
 
   const getRecipeSaved = useCallback(() => {
-    console.log(recipe.id);
-    console.log(userId);
     axios
       .get(
         "http://localhost:3001/api/get-recipe-saved?id=" +
@@ -39,7 +37,6 @@ const RecipeCard = (props) => {
         }
       )
       .then((res) => {
-        console.log(res.data.recipeExists);
         setIconColor(res.data.recipeExists ? "#FF0000" : "A9A9A9");
       })
       .catch((err) => {
@@ -54,7 +51,6 @@ const RecipeCard = (props) => {
     setAlertMessage("");
   };
   const recipeSaveHandler = () => {
-    console.log("Saving");
     axios
       .post("http://localhost:3001/api/save-recipe", {
         userId: userId,
@@ -90,7 +86,6 @@ const RecipeCard = (props) => {
   const hideModalHandler = () => {
     setShowModal(false);
   };
-  console.log(iconColor);
   const showModalHandler = (event) => {
     //Do not display modal if user clicked "save"
     if (event.target.tagName !== "path") setShowModal(true);
