@@ -1,17 +1,14 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useCallback, useEffect } from "react";
 import { useSelector } from "react-redux";
 import RecipeModal from "./RecipeModal";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
+import { Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
 
@@ -19,81 +16,86 @@ import recipe from "./recipe";
 import axios from "axios";
 
 const recipeData = recipe;
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-  marginLeft: "auto",
-  transition: theme.transitions.create("transform", {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
 const RecipeCard = (props) => {
-  const [expanded, setExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [recipe, setRecipe] = useState(recipeData);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [iconColor, setIconColor] = useState("A9A9A9");
 
   const userId = useSelector((state) => state.user.userId);
 
-  //   const getRecipe = useCallback(() => {
-  //     axios
-  //       .get(
-  //         "https://api.spoonacular.com/recipes/informationBulk?apiKey=" +
-  //           process.env.REACT_APP_API_KEY +
-  //           "&ids=" +
-  //           props.id +
-  //           "&includeNutrition=true"
-  //       )
-  //       .then((res) => {
-  //         setRecipe(res.data[0]);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }, [props.id]);
-  //   useEffect(() => {
-  //     console.log("In effect");
-  //     getRecipe();
-  //   }, [getRecipe]);
-  let modifiedSummary = recipe.summary ? recipe.summary : null;
+  const getRecipeSaved = useCallback(() => {
+    console.log(recipe.id);
+    console.log(userId);
+    axios
+      .get(
+        "http://localhost:3001/api/get-recipe-saved?id=" +
+          recipe.id +
+          "&userId=" +
+          userId,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data.recipeExists);
+        setIconColor(res.data.recipeExists ? "#FF0000" : "A9A9A9");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [userId]);
+  useEffect(() => {
+    getRecipeSaved();
+  }, [getRecipeSaved]);
 
-  modifiedSummary = modifiedSummary.replace(/<\/?[^>]+(>|$)/g, "");
-  var linebreak = "\n";
-
+  const alertClosedHandler = () => {
+    setAlertMessage("");
+  };
   const recipeSaveHandler = () => {
     console.log("Saving");
-    axios.post("http://localhost:3001/api/save-recipe", {
-      userId: userId,
-      id: recipe.id,
-      title: recipe.title,
-      ingredients: recipe.extendedIngredients,
-      vegan: recipe.vegan,
-      vegetarian: recipe.vegetarian,
-      glutenFree: recipe.glutenFree,
-      dairyFree: recipe.dairyFree,
-      veryHealthy: recipe.veryHealthy,
-      cheap: recipe.cheap,
-      summary: recipe.summary,
-      image: recipe.image,
-      instructions: recipe.analyzedInstructions[0].steps,
-      readyInMinutes: recipe.readyInMinutes,
-      nutrients: recipe.nutrition.nutrients,
-      headers: {
-        "access-token": localStorage.getItem("token"),
-      },
-    });
+    axios
+      .post("http://localhost:3001/api/save-recipe", {
+        userId: userId,
+        id: recipe.id,
+        title: recipe.title,
+        ingredients: recipe.extendedIngredients,
+        vegan: recipe.vegan,
+        vegetarian: recipe.vegetarian,
+        glutenFree: recipe.glutenFree,
+        dairyFree: recipe.dairyFree,
+        veryHealthy: recipe.veryHealthy,
+        cheap: recipe.cheap,
+        summary: recipe.summary,
+        image: recipe.image,
+        instructions: recipe.analyzedInstructions[0].steps,
+        readyInMinutes: recipe.readyInMinutes,
+        nutrients: recipe.nutrition.nutrients,
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.message === "Added to favorites") {
+          setIconColor("#FF0000");
+        } else {
+          setIconColor("A9A9A9");
+        }
+        setAlertMessage(res.data.message);
+      })
+      .catch((err) => {});
   };
   const hideModalHandler = () => {
     setShowModal(false);
   };
-
+  console.log(iconColor);
   const showModalHandler = (event) => {
     //Do not display modal if user clicked "save"
-    if (event.target.tagName != "path") setShowModal(true);
+    if (event.target.tagName !== "path") setShowModal(true);
   };
+
   return (
     <Fragment>
       {showModal && (
@@ -111,7 +113,12 @@ const RecipeCard = (props) => {
         <CardHeader
           action={
             <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
-              <FavoriteIcon style={{ color: "8B0000", cursor: "pointer" }} />
+              <FavoriteIcon
+                sx={{
+                  color: iconColor,
+                  cursor: "pointer",
+                }}
+              />
             </IconButton>
           }
           title={recipe.title ? recipe.title : "No title"}
@@ -154,6 +161,19 @@ const RecipeCard = (props) => {
           )}
         </CardContent>
       </Card>
+      <Snackbar
+        open={alertMessage !== ""}
+        autoHideDuration={4000}
+        onClose={alertClosedHandler}
+      >
+        <Alert
+          onClose={alertClosedHandler}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </Fragment>
   );
 };

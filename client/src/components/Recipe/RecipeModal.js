@@ -1,8 +1,4 @@
-import ReactDOM from "react-dom";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import { Fragment } from "react";
 
 import Modal from "../UI/Modal";
 const RecipeModal = (props) => {
@@ -25,7 +21,12 @@ const RecipeModal = (props) => {
       <Typography variant="h5" style={{ margin: 10 }}>
         {props.recipe.title}
       </Typography>
-      <img src={props.recipe.image} style={{ margin: 10 }} />
+      <img
+        src={props.recipe.image}
+        style={{ margin: 10 }}
+        alt={props.recipe.title}
+        title={props.recipe.title}
+      />
       <Typography
         paragraph
         style={{ margin: 10, fontSize: 20, color: "#808080" }}

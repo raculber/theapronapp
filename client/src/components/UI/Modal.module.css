@@ -22,3 +22,12 @@
   z-index: 20;
   overflow-y: scroll;
 }
+
+@media (max-width: 640px) {
+  .modal {
+    width: 80%;
+    left: 10%;
+    right: 10%;
+    transform: translate(0%, -50%);
+  }
+}
