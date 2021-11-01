@@ -9,6 +9,8 @@ const ingredientsSchema = new Schema({
   ingredients: [
     {
       id: Number,
+      name: String,
+      image: String
     },
   ],
 });

@@ -8,6 +8,7 @@ import { Route, Switch } from "react-router-dom";
 
 // App component
 function App() {
+  
   return (
     <Switch>
       <Route path="/sign-in" exact>

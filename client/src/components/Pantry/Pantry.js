@@ -8,10 +8,10 @@ const Pantry = () => {
   const removeIngredient = () => {
     axios
       .delete("http://localhost:3001/api/delete-ingredient", {
+        data: { userId: userId, ingredientId: 18064 },
         headers: {
           "access-token": localStorage.getItem("token"),
         },
-        data: { userId: userId, ingredientId: 5006 },
       })
       .then((res) => {
         console.log(res);
@@ -41,11 +41,12 @@ const Pantry = () => {
     //Replace ingredientId with correct id
     axios
       .post("http://localhost:3001/api/add-ingredient", {
+        userId: userId,
+        ingredientId: 18064,
+        ingredientName: "bread",
         headers: {
           "access-token": localStorage.getItem("token"),
         },
-        userId: userId,
-        ingredientId: 5006,
       })
       .then((res) => {
         console.log(res);
