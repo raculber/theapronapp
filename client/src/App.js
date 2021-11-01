@@ -1,7 +1,7 @@
-import SignIn from "./components/Auth/SignIn";
-
-import SignUp from "./components/Auth/SignUp";
 import Home from "./components/Home/Home";
+import Navbar from "./components/UI/Navbar";
+import SignIn from "./components/Auth/SignIn";
+import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
 
 import { Route, Switch } from "react-router-dom";
