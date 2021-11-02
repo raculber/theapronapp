@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { addUser } from "../../store/auth-slice";
 import axios from "axios";
+import "../../styles/SignIn.css"
 
 const SignUp = () => {
   const history = useHistory();
@@ -63,18 +64,12 @@ const SignUp = () => {
 
   return (
     <form onSubmit={validateSignUp}>
-      <label htmlFor="email" id="email">
-        Email
-      </label>
-      <input ref={emailRef} type="text" id="email"></input>
-      <label htmlFor="password" id="password">
-        Password
-      </label>
-      <input ref={passRef} type="password" id="password"></input>
-      <label htmlFor="passwordretype" id="passwordretype">
-        Confirm Password
-      </label>
-      <input ref={reenteredPassRef} type="password" id="passwordretype"></input>
+      <input ref={emailRef} placeholder="Email" type="text" id="email"></input>
+      <br></br><br></br>
+      <input ref={passRef} placeholder="Password" type="password" id="password"></input>
+      <br></br><br></br>
+      <input ref={reenteredPassRef} placeholder="Confirm Password" type="password" id="passwordretype"></input>
+      <br></br><br></br>
       <button type="submit">Create Account</button>
     </form>
   );
