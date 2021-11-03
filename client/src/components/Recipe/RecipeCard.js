@@ -11,7 +11,6 @@ import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
-
 import recipe from "./recipe";
 import axios from "axios";
 
@@ -19,7 +18,7 @@ const recipeData = recipe;
 const RecipeCard = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [iconColor, setIconColor] = useState("A9A9A9");
+  const [iconColor, setIconColor] = useState("#A9A9A9");
 
   const userId = useSelector((state) => state.user.userId);
 
@@ -37,7 +36,7 @@ const RecipeCard = (props) => {
         }
       )
       .then((res) => {
-        setIconColor(res.data.recipeExists ? "#FF0000" : "A9A9A9");
+        setIconColor(res.data.recipeExists ? "#FF0000" : "#A9A9A9");
       })
       .catch((err) => {
         console.log(err);
@@ -98,7 +97,7 @@ const RecipeCard = (props) => {
       )}
       <Card
         sx={{
-          maxWidth: 345,
+          maxWidth: 330,
           cursor: "pointer",
           zIndex: 1,
           position: "relative",
@@ -109,10 +108,7 @@ const RecipeCard = (props) => {
           action={
             <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
               <FavoriteIcon
-                sx={{
-                  color: iconColor,
-                  cursor: "pointer",
-                }}
+                sx={{ cursor: "pointer", top: 0, right: 0, color: iconColor }}
               />
             </IconButton>
           }

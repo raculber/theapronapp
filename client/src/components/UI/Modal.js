@@ -16,7 +16,10 @@ const ModalOverlay = (props) => {
           position: "absolute",
           top: 10,
           right: 10,
+          transition: "none",
+          border: "none",
         }}
+        className={classes.button}
         onClick={props.onClose}
       >
         <CloseIcon sx={{ width: 40, height: 40 }} />

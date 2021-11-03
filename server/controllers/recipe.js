@@ -67,4 +67,18 @@ export const getRecipeSaved = async (req, res) => {
     res.json({ recipeExists: false });
   }
 };
+
+export const getSavedRecipes = async (req, res) => {
+  let userId = req.query.userId;
+  console.log(userId);
+
+  const recipes = await Recipe.find({ userId: userId });
+  console.log(recipes);
+  if (recipes.length > 0) {
+    res.json({ recipes: recipes });
+  } else {
+    res.json({ message: "No recipes saved" });
+  }
+};
+
 export default router;
