@@ -1,12 +1,14 @@
 import { useDispatch } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import { addUser } from "../../store/auth-slice";
-import { useHistory } from "react-router";
+import { createBrowserHistory } from "history";
 import axios from "axios";
-import "../../styles/SignIn.css"
+import "../../styles/SignIn.css";
 
 const SignIn = () => {
-  const history = useHistory();
+  const history = createBrowserHistory({
+    forceRefresh: true,
+  });
   const dispatch = useDispatch();
   const emailRef = useRef("");
   const passRef = useRef("");
@@ -22,6 +24,8 @@ const SignIn = () => {
           },
         })
         .then((res) => {
+          //User authenticated, add whatever code you want
+          //here after successful response
           console.log(res);
           history.push("/");
         })
@@ -45,7 +49,6 @@ const SignIn = () => {
         // sign up/in failed
         if (res.data.message) {
           // Handler server error in this code block
-          
         } else if (res.data.token) {
           dispatch(
             addUser({
@@ -62,10 +65,22 @@ const SignIn = () => {
   return (
     <div>
       <form onSubmit={validateSignIn}>
-        <input type="text" placeholder="Email" id="email" ref={emailRef}></input>
-        <br></br><br></br>
-        <input type="password" placeholder="Password" id="password" ref={passRef}></input>
-        <br></br><br></br>
+        <input
+          type="text"
+          placeholder="Email"
+          id="email"
+          ref={emailRef}
+        ></input>
+        <br></br>
+        <br></br>
+        <input
+          type="password"
+          placeholder="Password"
+          id="password"
+          ref={passRef}
+        ></input>
+        <br></br>
+        <br></br>
         <button>Sign In</button>
       </form>
     </div>

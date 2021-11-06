@@ -1,16 +1,14 @@
-import React from 'react';
+import React from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+import axios from "axios";
 import Home from "./components/Home/Home";
 import Navbar from "./components/UI/Navbar";
 import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
 
-import { 
-  BrowserRouter as Router,
-  Switch,
-  Route, 
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // App component
 function App() {
