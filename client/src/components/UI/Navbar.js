@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 import ReorderIcon from "@material-ui/icons/Reorder";
 import LogoutButton from "./LogoutButton";
 import { useSelector } from "react-redux";
-
 import { removeUser } from "../../store/auth-slice";
 import "../../styles/Navbar.css";
+import { createBrowserHistory } from "history";
 
 function Navbar(props) {
   const [openLinks, setOpenLinks] = useState(false);
+  const history = createBrowserHistory({ forceRefresh: true });
   const [loggedIn, setLoggedIn] = useState(
     useSelector((state) => state.user.isLoggedIn)
   );
@@ -23,6 +24,7 @@ function Navbar(props) {
     localStorage.setItem("token", "");
     localStorage.removeItem("persist:root");
     dispatch(removeUser);
+    history.push("/");
     setLoggedIn(false);
   };
   console.log(loggedIn);
