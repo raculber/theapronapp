@@ -1,90 +1,145 @@
+//my task
+
+
 import { useDispatch } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import { addUser } from "../../store/auth-slice";
-import { createBrowserHistory } from "history";
+import { useHistory } from "react-router";
 import axios from "axios";
-import "../../styles/SignIn.css";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const SignIn = () => {
-  const history = createBrowserHistory({
-    forceRefresh: true,
-  });
-  const dispatch = useDispatch();
-  const emailRef = useRef("");
-  const passRef = useRef("");
-  const [token, setToken] = useState("");
 
-  useEffect(() => {
-    localStorage.setItem("token", token);
-    if (token !== "") {
-      axios
-        .get("http://localhost:3001/api/auth", {
-          headers: {
-            "access-token": localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          //User authenticated, add whatever code you want
-          //here after successful response
-          console.log(res);
-          history.push("/");
-        })
-        //Use this code block if user not authenticated
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [token, history]);
+// function Copyright(props) {
+//   return (
+//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
+//       {'Copyright © '}
+//       <Link color="inherit" href="https://mui.com/">
+//         Your Website
+//       </Link>{' '}
+//       {new Date().getFullYear()}
+//       {'.'}
+//     </Typography>
+//   );
+// }
 
-  const validateSignIn = (event) => {
+const theme = createTheme();
+
+export default function SignIn() {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const userInfo = {
-      enteredEmail: emailRef.current.value,
-      enteredPassword: passRef.current.value,
-    };
-    axios
-      .post("http://localhost:3001/api/sign-in", userInfo)
-      .then((res) => {
-        // res.data.message will contain necessary info about why
-        // sign up/in failed
-        if (res.data.message) {
-          // Handler server error in this code block
-        } else if (res.data.token) {
-          dispatch(
-            addUser({
-              userId: res.data.result.userId,
-              email: res.data.result.enteredEmail,
-            })
-          );
-          setToken(res.data.token);
-        }
-      })
-      .catch((err) => console.log(err));
+    const data = new FormData(event.currentTarget);
+    // eslint-disable-next-line no-console
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
   };
-
+  // function Home() {
+  //   const history = useHistory();
+  
+  //   const redirect = () => {
+  //   history.push('')
+  // }
+  
   return (
-    <div>
-      <form onSubmit={validateSignIn}>
-        <input
-          type="text"
-          placeholder="Email"
-          id="email"
-          ref={emailRef}
-        ></input>
-        <br></br>
-        <br></br>
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          ref={passRef}
-        ></input>
-        <br></br>
-        <br></br>
-        <button>Sign In</button>
-      </form>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/4_jhDO54BYg/1600x900)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              {/* <LockOutlinedIcon /> */}
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in To your Apron Account
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                // http://localhost:3000
+                //onClick={redirect}
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              > 
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="http://localhost:3000/sign-up" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+              {/* <Copyright sx={{ mt: 5 }} /> */}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
   );
-};
-
-export default SignIn;
+}
