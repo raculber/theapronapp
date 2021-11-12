@@ -1,9 +1,8 @@
 import express from "express";
 
 import Recipe from "../models/recipe.js";
-
+import https from "https";
 const router = express.Router();
-
 export const saveRecipe = async (req, res) => {
   let {
     userId,
@@ -79,6 +78,36 @@ export const getSavedRecipes = async (req, res) => {
   } else {
     res.json({ message: "No recipes saved" });
   }
+};
+
+export const getRandomRecipes = async (req, res) => {
+  let number = req.query.number;
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/recipes/complexSearch?apiKey=" +
+      process.env.API_KEY +
+      "&addRecipeNutrition=true&number=" +
+      number +
+      "&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true",
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ recipes: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401);
+  });
+
+  request.end();
 };
 
 export default router;
