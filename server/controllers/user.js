@@ -57,8 +57,11 @@ export const signInUser = async (req, res) => {
   enteredPassword = enteredPassword.trim();
 
   const user = await User.findOne({ email: enteredEmail });
-
-  if (user == null) return res.json({ message: "User does not exist" });
+  if (!emailValidator.validate(enteredEmail))
+    return res.json({ message: "Invalid email" });
+  else if (user == null) return res.json({ message: "User does not exist" });
+  else if (enteredPassword.length < 6)
+    return res.json({ message: "Password must be at least six characters" });
   else {
     const userId = user.userId;
     const validPass = await bcrypt.compare(enteredPassword, user.password);

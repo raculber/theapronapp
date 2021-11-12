@@ -21,9 +21,11 @@ function Navbar(props) {
   };
   const logoutHandler = () => {
     localStorage.setItem("token", "");
+    localStorage.removeItem("persist:root");
     dispatch(removeUser);
     setLoggedIn(false);
   };
+  console.log(loggedIn);
   return (
     <div className="navbar">
       <div className="leftSide" id={openLinks ? "open" : "close"}>

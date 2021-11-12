@@ -11,6 +11,8 @@ import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
+import dollarIcon from "../../images/dollar_icon.png";
+import vegetarianIcon from "../../images/vegetarian_icon.jpg";
 import recipe from "./recipe";
 import axios from "axios";
 
@@ -132,6 +134,15 @@ const RecipeCard = (props) => {
           alt={recipe.title ? recipe.title : "No title"}
         />
         <CardContent>
+          {recipe.vegetarian && !recipe.vegan && (
+            <img
+              width="45"
+              height="45"
+              alt="Budget Friendly"
+              title="Budget Friendly"
+              src={vegetarianIcon}
+            />
+          )}
           {recipe.vegan && (
             <img
               width="45"
@@ -148,6 +159,24 @@ const RecipeCard = (props) => {
               alt="Gluten Free"
               title="Gluten Free"
               src={glutenFreeIcon}
+            />
+          )}
+          {recipe.cheap && (
+            <img
+              width="45"
+              height="45"
+              alt="Budget Friendly"
+              title="Budget Friendly"
+              src={dollarIcon}
+            />
+          )}
+          {recipe.cheap && (
+            <img
+              width="45"
+              height="45"
+              alt="Budget Friendly"
+              title="Budget Friendly"
+              src={dollarIcon}
             />
           )}
         </CardContent>

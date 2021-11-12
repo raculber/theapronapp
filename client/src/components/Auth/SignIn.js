@@ -1,62 +1,83 @@
-//my task
-
-
 import { useDispatch } from "react-redux";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { addUser } from "../../store/auth-slice";
 import { useHistory } from "react-router";
+import { createBrowserHistory } from "history";
 import axios from "axios";
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-
-// function Copyright(props) {
-//   return (
-//     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://mui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const history = createBrowserHistory({ forceRefresh: true });
+  const dispatch = useDispatch();
+  const [token, setToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+    if (token !== "") {
+      axios
+        .get("http://localhost:3001/api/auth", {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          history.replace("/");
+        })
+        //Use this code block if user not authenticated
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [token, history]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const userInfo = {
+      enteredEmail: data.get("email"),
+      enteredPassword: data.get("password"),
+    };
+    axios
+      .post("http://localhost:3001/api/sign-in", userInfo)
+      .then((res) => {
+        // res.data.message will contain necessary info about why
+        // sign up/in failed
+        console.log(res);
+        if (res.data.message) {
+          // Handler server error in this code block
+          setErrorMessage(res.data.message);
+        } else if (res.data.token) {
+          dispatch(
+            addUser({
+              userId: res.data.result.userId,
+              email: res.data.result.enteredEmail,
+            })
+          );
+          setToken(res.data.token);
+        }
+      })
+      .catch((err) => console.log(err));
   };
-  // function Home() {
-  //   const history = useHistory();
-  
-  //   const redirect = () => {
-  //   history.push('')
-  // }
-  
+
   return (
     <ThemeProvider theme={theme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
           item
@@ -64,12 +85,15 @@ export default function SignIn() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/4_jhDO54BYg/1600x900)',
-            backgroundRepeat: 'no-repeat',
+            backgroundImage:
+              "url(https://source.unsplash.com/4_jhDO54BYg/1600x900)",
+            backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+              t.palette.mode === "light"
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -77,18 +101,21 @@ export default function SignIn() {
             sx={{
               my: 8,
               mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              {/* <LockOutlinedIcon /> */}
-            </Avatar>
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
             <Typography component="h1" variant="h5">
-              Sign in To your Apron Account
+              Sign in to your Apron Account
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin="normal"
                 required
@@ -109,6 +136,11 @@ export default function SignIn() {
                 id="password"
                 autoComplete="current-password"
               />
+              {errorMessage && (
+                <Typography component="h6" style={{ color: "red" }}>
+                  {errorMessage}
+                </Typography>
+              )}
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -120,7 +152,7 @@ export default function SignIn() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-              > 
+              >
                 Sign In
               </Button>
               <Grid container>
@@ -135,7 +167,6 @@ export default function SignIn() {
                   </Link>
                 </Grid>
               </Grid>
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </Box>
           </Box>
         </Grid>
