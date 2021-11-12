@@ -97,14 +97,18 @@ const RecipeCard = (props) => {
         <RecipeModal onClose={hideModalHandler} recipe={props.recipe} />
       )}
       <Card
+        className="card"
+        onClick={showModalHandler}
         sx={{
           maxWidth: 330,
           cursor: "pointer",
           zIndex: 1,
           position: "relative",
           margin: 2,
+          ["@media (max-width:730px)"]: {
+            maxWidth: 250,
+          },
         }}
-        onClick={showModalHandler}
       >
         <CardHeader
           action={
