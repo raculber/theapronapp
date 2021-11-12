@@ -4,8 +4,14 @@ dotenv.config();
 
 const auth = async (req, res, next) => {
   let token = "";
+
   if (req.headers["access-token"]) token = req.headers["access-token"];
-  else token = req.body.headers["access-token"];
+  else
+    try {
+      token = req.body.headers["access-token"];
+    } catch (err) {
+      res.status(401).json({ message: "User not authenticated" });
+    }
   if (token) {
     const tokenData = jwt.verify(
       token,

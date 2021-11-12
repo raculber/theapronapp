@@ -11,23 +11,22 @@ import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
-
-import recipe from "./recipe";
+import dollarIcon from "../../images/dollar_icon.png";
+import vegetarianIcon from "../../images/vegetarian_icon.jpg";
+// import recipe from "./recipe";
 import axios from "axios";
 
-const recipeData = recipe;
 const RecipeCard = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [iconColor, setIconColor] = useState("A9A9A9");
-
+  const [iconColor, setIconColor] = useState("#A9A9A9");
   const userId = useSelector((state) => state.user.userId);
 
   const getRecipeSaved = useCallback(() => {
     axios
       .get(
         "http://localhost:3001/api/get-recipe-saved?id=" +
-          recipe.id +
+          props.recipe.id +
           "&userId=" +
           userId,
         {
@@ -37,12 +36,12 @@ const RecipeCard = (props) => {
         }
       )
       .then((res) => {
-        setIconColor(res.data.recipeExists ? "#FF0000" : "A9A9A9");
+        setIconColor(res.data.recipeExists ? "#FF0000" : "#A9A9A9");
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [userId]);
+  }, [props.recipe.id, userId]);
   useEffect(() => {
     getRecipeSaved();
   }, [getRecipeSaved]);
@@ -50,24 +49,25 @@ const RecipeCard = (props) => {
   const alertClosedHandler = () => {
     setAlertMessage("");
   };
+  console.log(props.recipe.cheap);
   const recipeSaveHandler = () => {
     axios
       .post("http://localhost:3001/api/save-recipe", {
         userId: userId,
-        id: recipe.id,
-        title: recipe.title,
-        ingredients: recipe.extendedIngredients,
-        vegan: recipe.vegan,
-        vegetarian: recipe.vegetarian,
-        glutenFree: recipe.glutenFree,
-        dairyFree: recipe.dairyFree,
-        veryHealthy: recipe.veryHealthy,
-        cheap: recipe.cheap,
-        summary: recipe.summary,
-        image: recipe.image,
-        instructions: recipe.analyzedInstructions[0].steps,
-        readyInMinutes: recipe.readyInMinutes,
-        nutrients: recipe.nutrition.nutrients,
+        id: props.recipe.id,
+        title: props.recipe.title,
+        ingredients: props.recipe.extendedIngredients,
+        vegan: props.recipe.vegan,
+        vegetarian: props.recipe.vegetarian,
+        glutenFree: props.recipe.glutenFree,
+        dairyFree: props.recipe.dairyFree,
+        veryHealthy: props.recipe.veryHealthy,
+        cheap: props.recipe.cheap,
+        summary: props.recipe.summary,
+        image: props.recipe.image,
+        instructions: props.recipe.analyzedInstructions[0].steps,
+        readyInMinutes: props.recipe.readyInMinutes,
+        nutrients: props.recipe.nutrition.nutrients,
         headers: {
           "access-token": localStorage.getItem("token"),
         },
@@ -94,14 +94,15 @@ const RecipeCard = (props) => {
   return (
     <Fragment>
       {showModal && (
-        <RecipeModal onClose={hideModalHandler} recipe={recipeData} />
+        <RecipeModal onClose={hideModalHandler} recipe={props.recipe} />
       )}
       <Card
         sx={{
-          maxWidth: 345,
+          maxWidth: 330,
           cursor: "pointer",
           zIndex: 1,
           position: "relative",
+          margin: 2,
         }}
         onClick={showModalHandler}
       >
@@ -110,21 +111,23 @@ const RecipeCard = (props) => {
             <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
               <FavoriteIcon
                 sx={{
-                  color: iconColor,
                   cursor: "pointer",
+                  top: 0,
+                  right: 0,
+                  color: iconColor,
                 }}
               />
             </IconButton>
           }
-          title={recipe.title ? recipe.title : "No title"}
+          title={props.recipe.title ? props.recipe.title : "No title"}
           subheader={
-            recipe.servings && recipe.nutrition.nutrients[0].amount
+            props.recipe.servings && props.recipe.nutrition.nutrients[0].amount
               ? "Servings: " +
-                recipe.servings +
+                props.recipe.servings +
                 " Calories: " +
-                Math.round(recipe.nutrition.nutrients[0].amount) +
+                Math.round(props.recipe.nutrition.nutrients[0].amount) +
                 " Ready In: " +
-                recipe.readyInMinutes +
+                props.recipe.readyInMinutes +
                 " minutes"
               : ""
           }
@@ -132,11 +135,20 @@ const RecipeCard = (props) => {
         <CardMedia
           component="img"
           height="150"
-          image={recipe.image && recipe.image}
-          alt={recipe.title ? recipe.title : "No title"}
+          image={props.recipe.image && props.recipe.image}
+          alt={props.recipe.title ? props.recipe.title : "No title"}
         />
         <CardContent>
-          {recipe.vegan && (
+          {props.recipe.vegetarian && !props.recipe.vegan && (
+            <img
+              width="45"
+              height="45"
+              alt="Budget Friendly"
+              title="Budget Friendly"
+              src={vegetarianIcon}
+            />
+          )}
+          {props.recipe.vegan && (
             <img
               width="45"
               height="45"
@@ -145,13 +157,22 @@ const RecipeCard = (props) => {
               src={veganIcon}
             />
           )}
-          {recipe.glutenFree && (
+          {props.recipe.glutenFree && (
             <img
               width="45"
               height="45"
               alt="Gluten Free"
               title="Gluten Free"
               src={glutenFreeIcon}
+            />
+          )}
+          {props.recipe.cheap && (
+            <img
+              width="45"
+              height="45"
+              alt="Budget Friendly"
+              title="Budget Friendly"
+              src={dollarIcon}
             />
           )}
         </CardContent>

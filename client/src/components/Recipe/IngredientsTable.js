@@ -30,7 +30,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const IngredientsTable = (props) => {
-  console.log(props.recipe);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 200 }} aria-label="customized table">
@@ -41,7 +40,7 @@ const IngredientsTable = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.recipe.extendedIngredients.map((ingredient) => (
+          {props.recipe.nutrition.ingredients.map((ingredient) => (
             <StyledTableRow key={ingredient.name}>
               <StyledTableCell component="th" scope="row">
                 {ingredient.name.charAt(0).toUpperCase() +

@@ -8,7 +8,12 @@ import {
   getIngredients,
   deleteIngredient,
 } from "../controllers/ingredients.js";
-import { saveRecipe, getRecipeSaved } from "../controllers/recipe.js";
+import {
+  saveRecipe,
+  getRecipeSaved,
+  getSavedRecipes,
+  getRandomRecipes,
+} from "../controllers/recipe.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
@@ -23,4 +28,6 @@ router.delete("/api/delete-ingredient", auth, deleteIngredient);
 
 router.post("/api/save-recipe", auth, saveRecipe);
 router.get("/api/get-recipe-saved", auth, getRecipeSaved);
+router.get("/api/get-saved-recipes", auth, getSavedRecipes);
+router.get("/api/get-random-recipes", getRandomRecipes);
 export default router;
