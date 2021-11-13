@@ -13,6 +13,7 @@ import {
   getRecipeSaved,
   getSavedRecipes,
   getRandomRecipes,
+  getRecipesByQuery,
 } from "../controllers/recipe.js";
 import auth from "../middleware/auth.js";
 
@@ -27,7 +28,8 @@ router.post("/api/add-ingredient", auth, addIngredient);
 router.delete("/api/delete-ingredient", auth, deleteIngredient);
 
 router.post("/api/save-recipe", auth, saveRecipe);
-router.get("/api/get-recipe-saved", auth, getRecipeSaved);
+router.get("/api/get-recipe-saved", getRecipeSaved);
 router.get("/api/get-saved-recipes", auth, getSavedRecipes);
 router.get("/api/get-random-recipes", getRandomRecipes);
+router.get("/api/get-recipes-by-query", getRecipesByQuery);
 export default router;

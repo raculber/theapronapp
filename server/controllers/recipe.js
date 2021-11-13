@@ -110,4 +110,49 @@ export const getRandomRecipes = async (req, res) => {
   request.end();
 };
 
+export const getRecipesByQuery = async (req, res) => {
+  console.log("In request");
+  let number = req.query.number;
+  let query = req.query.search;
+  let diet = "";
+  let intolerances = "";
+  if (req.query.diet) {
+    diet = "&diet=" + req.query.diet;
+  }
+  if (req.query.intolerances) {
+    intolerances = "&intolerences=" + req.query.intolerances;
+  }
+  console.log(diet);
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/recipes/complexSearch?apiKey=" +
+      process.env.API_KEY +
+      "&addRecipeNutrition=true&number=" +
+      number +
+      "&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true" +
+      "&query=" +
+      query +
+      diet +
+      intolerances,
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ recipes: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401);
+  });
+
+  request.end();
+};
+
 export default router;

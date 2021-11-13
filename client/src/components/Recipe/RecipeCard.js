@@ -107,6 +107,7 @@ const RecipeCard = (props) => {
           margin: 2,
           ["@media (max-width:730px)"]: {
             maxWidth: 250,
+            margin: 1,
           },
         }}
       >
