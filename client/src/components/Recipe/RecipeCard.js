@@ -13,6 +13,7 @@ import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
 import dollarIcon from "../../images/dollar_icon.png";
 import vegetarianIcon from "../../images/vegetarian_icon.jpg";
+import dairyFree from "../../images/dairy_free.png";
 // import recipe from "./recipe";
 import axios from "axios";
 
@@ -148,8 +149,8 @@ const RecipeCard = (props) => {
             <img
               width="45"
               height="45"
-              alt="Budget Friendly"
-              title="Budget Friendly"
+              alt="Vegetarian"
+              title="Vegetarian"
               src={vegetarianIcon}
             />
           )}
@@ -169,6 +170,15 @@ const RecipeCard = (props) => {
               alt="Gluten Free"
               title="Gluten Free"
               src={glutenFreeIcon}
+            />
+          )}
+          {props.recipe.dairyFree && (
+            <img
+              width="45"
+              height="45"
+              alt="Dairy Free"
+              title="Dairy Free"
+              src={dairyFree}
             />
           )}
           {props.recipe.cheap && (

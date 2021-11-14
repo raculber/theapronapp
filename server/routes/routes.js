@@ -32,4 +32,5 @@ router.get("/api/get-recipe-saved", getRecipeSaved);
 router.get("/api/get-saved-recipes", auth, getSavedRecipes);
 router.get("/api/get-random-recipes", getRandomRecipes);
 router.get("/api/get-recipes-by-query", getRecipesByQuery);
+router.get("/api/get-recipes-by-query", getRecipesByQuery);
 export default router;
