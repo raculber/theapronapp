@@ -15,6 +15,10 @@ import {
   getRandomRecipes,
   getRecipesByQuery,
 } from "../controllers/recipe.js";
+import {
+  addRecipeToDate,
+  deleteRecipeFromDate,
+} from "../controllers/calendar.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
@@ -33,4 +37,7 @@ router.get("/api/get-saved-recipes", auth, getSavedRecipes);
 router.get("/api/get-random-recipes", getRandomRecipes);
 router.get("/api/get-recipes-by-query", getRecipesByQuery);
 router.get("/api/get-recipes-by-query", getRecipesByQuery);
+
+router.post("/api/add-recipe-to-date", addRecipeToDate);
+router.post("/api/delete-recipe-from-date", deleteRecipeFromDate);
 export default router;

@@ -18,16 +18,6 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const theme = createTheme();
 
 export default function savedRecipes() {
-  axios
-    .get("http://localhost:3001/get-saved-recipes?userId" + user, {
-      headers: {
-        "access-token": localStorage.getItem("token"),
-      },
-    })
-    .then((res) => {
-      recipes = res.data.recipes;
-    })
-    .catch((err) => {});
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
