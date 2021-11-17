@@ -116,13 +116,14 @@ export const getRecipesByQuery = async (req, res) => {
   let query = req.query.search;
   let diet = "";
   let intolerances = "";
+  console.log(req.query.intolerances);
   if (req.query.diet) {
     diet = "&diet=" + req.query.diet;
   }
   if (req.query.intolerances) {
     intolerances = "&intolerences=" + req.query.intolerances;
   }
-  console.log(diet);
+  console.log(intolerances);
   const options = {
     hostname: "api.spoonacular.com",
     path:
