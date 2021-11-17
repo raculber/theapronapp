@@ -12,23 +12,46 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { addUser } from "../../store/auth-slice";
+import { useHistory } from "react-router";
+import { createBrowserHistory } from "history";
+import axios from "axios";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const theme = createTheme();
 
 export default function SignUp() {
+  // const history = createBrowserHistory({ forceRefresh: true });
+  // const dispatch = useDispatch();
+  // const [token, setToken] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
+
+
+  // useEffect(() => {
+  //   localStorage.setItem("token", token);
+  //   if (token !== "") {
+  //     axios
+  //       .get("http://localhost:3001/api/auth", {
+  //         headers: {
+  //           "access-token": localStorage.getItem("token"),
+  //         },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         history.replace("/");
+  //       })
+  //       //Use this code block if user not authenticated
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   }
+  // }, [token, history]);
+
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -130,7 +153,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

@@ -36,6 +36,8 @@ function Navbar(props) {
           <Link to="/"> Home </Link>
           {!loggedIn && <Link to="/sign-in"> Sign In </Link>}
           {!loggedIn && <Link to="/sign-up"> Sign Up </Link>}
+          {loggedIn && <Link to= "/savedRecipes"> Saved Recipes </Link> }
+          {loggedIn && <Link to= "/Pantry"> Pantry </Link>}
           {loggedIn && <LogoutButton />}
         </div>
       </div>
@@ -43,6 +45,8 @@ function Navbar(props) {
         <Link to="/"> Home </Link>
         {!loggedIn && <Link to="/sign-in"> Sign In </Link>}
         {!loggedIn && <Link to="/sign-up"> Sign Up </Link>}
+        {loggedIn && <Link to= "/savedRecipes"> Saved Recipes </Link>}
+        {loggedIn && <Link to= "/Pantry"> Pantry </Link>}
         {loggedIn && <LogoutButton onClick={logoutHandler} />}
         <button className="reOrder" onClick={toggleNavbar}>
           <ReorderIcon />
