@@ -29,6 +29,7 @@
   color: rgb(92, 89, 89);
   text-decoration: none;
   margin: 20px;
+  text-align: center;
   padding-bottom: 6px;
 }
 
@@ -72,7 +73,7 @@
     width: 70px;
   }
   .navbar .leftSide {
-    padding-left: 50px;
+    padding-left: 40px;
   }
 }
 
@@ -80,7 +81,18 @@
   .navbar .rightSide a {
     display: none;
   }
-
+  .navbar #open a {
+    width: 50px;
+    margin: 5px;
+    font-size: 15px;
+  }
+  .navbar .leftSide img {
+    width: 0px;
+  }
+  .navbar #close .hiddenLinks {
+    display: none;
+    margin-left: 0px;
+  }
   .navbar .rightSide button {
     display: none;
   }
@@ -90,7 +102,11 @@
   }
 
   .navbar .rightSide .reOrder {
-    display: inherit;
+    display: inline-block;
+    position: relative;
+    padding: 0px;
+    top: 2px;
+    right: 2px;
   }
 }
 

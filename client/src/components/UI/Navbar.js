@@ -115,6 +115,19 @@ function Navbar(props) {
               Pantry{" "}
             </Link>
           )}
+          <Link
+            to="/calendar"
+            onClick={() => setSelectedTab("calendar")}
+            style={{
+              borderBottom:
+                selectedTab === "calendar" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "calendar" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Calendar{" "}
+          </Link>
           {loggedIn && <LogoutButton onClick={logoutHandler} />}
         </div>
       </div>
@@ -195,6 +208,19 @@ function Navbar(props) {
             Pantry{" "}
           </Link>
         )}
+        <Link
+          to="/calendar"
+          onClick={() => setSelectedTab("calendar")}
+          style={{
+            borderBottom:
+              selectedTab === "calendar" ? "3px solid rgb(0, 0, 0)" : "none",
+            color:
+              selectedTab === "calendar" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+          }}
+        >
+          {" "}
+          Calendar{" "}
+        </Link>
         {loggedIn && <LogoutButton onClick={logoutHandler} />}
         <button className="reOrder" onClick={toggleNavbar}>
           <ReorderIcon />
