@@ -60,8 +60,6 @@ export const signInUser = async (req, res) => {
   if (!emailValidator.validate(enteredEmail))
     return res.json({ message: "Invalid email" });
   else if (user == null) return res.json({ message: "Invalid login" });
-  else if (enteredPassword.length < 6)
-    return res.json({ message: "Password must be at least six characters" });
   else {
     const userId = user.userId;
     const validPass = await bcrypt.compare(enteredPassword, user.password);

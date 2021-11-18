@@ -18,6 +18,7 @@ import {
 import {
   addRecipeToDate,
   deleteRecipeFromDate,
+  getRecipesByDate,
 } from "../controllers/calendar.js";
 import auth from "../middleware/auth.js";
 
@@ -36,8 +37,8 @@ router.get("/api/get-recipe-saved", getRecipeSaved);
 router.get("/api/get-saved-recipes", auth, getSavedRecipes);
 router.get("/api/get-random-recipes", getRandomRecipes);
 router.get("/api/get-recipes-by-query", getRecipesByQuery);
-router.get("/api/get-recipes-by-query", getRecipesByQuery);
 
-router.post("/api/add-recipe-to-date", addRecipeToDate);
-router.post("/api/delete-recipe-from-date", deleteRecipeFromDate);
+router.post("/api/add-recipe-to-date", auth, addRecipeToDate);
+router.delete("/api/delete-recipe-from-date", auth, deleteRecipeFromDate);
+router.get("/api/get-recipes-by-date", auth, getRecipesByDate);
 export default router;

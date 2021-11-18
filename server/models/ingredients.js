@@ -10,7 +10,7 @@ const ingredientsSchema = new Schema({
     {
       id: Number,
       name: String,
-      image: String
+      image: String,
     },
   ],
 });

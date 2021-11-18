@@ -7,7 +7,7 @@ const Calendar = () => {
   const userId = useSelector((state) => state.user.userId);
   console.log(userId);
 
-  const addRecipe = (event) => {
+  const addRecipe = () => {
     console.log(dateRef.current.value);
     const dateRecipeInfo = {
       userId: userId,
@@ -15,7 +15,53 @@ const Calendar = () => {
       recipe: recipe,
     };
     axios
-      .post("http://localhost:3001/api/add-recipe-to-date", dateRecipeInfo)
+      .post("http://localhost:3001/api/add-recipe-to-date", {
+        userId: userId,
+        date: dateRef.current.value,
+        recipe: recipe,
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const deleteRecipe = () => {
+    axios
+      .delete("http://localhost:3001/api/delete-recipe-from-date", {
+        data: {
+          userId: userId,
+          date: dateRef.current.value,
+          recipeId: recipe.id,
+        },
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const getRecipesByDate = () => {
+    axios
+      .get(
+        "http://localhost:3001/api/get-recipes-by-date?userId=" +
+          userId +
+          "&date=" +
+          dateRef.current.value,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
       })
@@ -29,12 +75,12 @@ const Calendar = () => {
         type="date"
         id="start"
         name="trip-start"
-        value="2018-07-22"
-        min="2018-01-01"
-        max="2018-12-31"
+        defaultValue="2018-07-22"
         ref={dateRef}
       />
       <button onClick={addRecipe}>Add recipe</button>
+      <button onClick={deleteRecipe}>Delete recipe</button>
+      <button onClick={getRecipesByDate}>Get Recipes</button>
     </div>
   );
 };

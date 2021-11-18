@@ -12,6 +12,7 @@ import { createBrowserHistory } from "history";
 function Navbar(props) {
   const [openLinks, setOpenLinks] = useState(false);
   const history = createBrowserHistory({ forceRefresh: true });
+  const [selectedTab, setSelectedTab] = useState("home");
   const [loggedIn, setLoggedIn] = useState(
     useSelector((state) => state.user.isLoggedIn)
   );
@@ -27,26 +28,173 @@ function Navbar(props) {
     history.push("/");
     setLoggedIn(false);
   };
-  console.log(loggedIn);
+  console.log(selectedTab);
   return (
     <div className="navbar">
       <div className="leftSide" id={openLinks ? "open" : "close"}>
         <img src={Logo} alt="Apron Logo" />
         <div className="hiddenLinks">
-          <Link to="/"> Home </Link>
-          {!loggedIn && <Link to="/sign-in"> Sign In </Link>}
-          {!loggedIn && <Link to="/sign-up"> Sign Up </Link>}
-          {loggedIn && <Link to= "/savedRecipes"> Saved Recipes </Link> }
-          {loggedIn && <Link to= "/Pantry"> Pantry </Link>}
-          {loggedIn && <LogoutButton />}
+          <Link
+            to="/"
+            onClick={() => setSelectedTab("home")}
+            style={{
+              borderBottom:
+                selectedTab === "home" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "home" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Home{" "}
+          </Link>
+          {!loggedIn && (
+            <Link
+              to="/sign-in"
+              onClick={() => setSelectedTab("sign-in")}
+              style={{
+                borderBottom:
+                  selectedTab === "sign-in" ? "3px solid rgb(0, 0, 0)" : "none",
+                color:
+                  selectedTab === "sign-in"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Sign In{" "}
+            </Link>
+          )}
+          {!loggedIn && (
+            <Link
+              to="/sign-up"
+              onClick={() => setSelectedTab("sign-up")}
+              style={{
+                borderBottom:
+                  selectedTab === "sign-up" ? "3px solid rgb(0, 0, 0)" : "none",
+                color:
+                  selectedTab === "sign-up"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Sign Up{" "}
+            </Link>
+          )}
+          {loggedIn && (
+            <Link
+              to="/savedRecipes"
+              onClick={() => setSelectedTab("saved-recipes")}
+              style={{
+                borderBottom:
+                  selectedTab === "saved-recipes"
+                    ? "3px solid rgb(0, 0, 0)"
+                    : "none",
+                color:
+                  selectedTab === "saved-recipes"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Saved Recipes{" "}
+            </Link>
+          )}
+          {loggedIn && (
+            <Link
+              to="/Pantry"
+              onClick={() => setSelectedTab("pantry")}
+              style={{
+                borderBottom:
+                  selectedTab === "pantry" ? "3px solid rgb(0, 0, 0)" : "none",
+                color:
+                  selectedTab === "pantry" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Pantry{" "}
+            </Link>
+          )}
+          {loggedIn && <LogoutButton onClick={logoutHandler} />}
         </div>
       </div>
       <div className="rightSide">
-        <Link to="/"> Home </Link>
-        {!loggedIn && <Link to="/sign-in"> Sign In </Link>}
-        {!loggedIn && <Link to="/sign-up"> Sign Up </Link>}
-        {loggedIn && <Link to= "/savedRecipes"> Saved Recipes </Link>}
-        {loggedIn && <Link to= "/Pantry"> Pantry </Link>}
+        <Link
+          to="/"
+          onClick={() => setSelectedTab("home")}
+          style={{
+            borderBottom:
+              selectedTab === "home" ? "3px solid rgb(0, 0, 0)" : "none",
+            color: selectedTab === "home" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+          }}
+        >
+          {" "}
+          Home{" "}
+        </Link>
+        {!loggedIn && (
+          <Link
+            to="/sign-in"
+            onClick={() => setSelectedTab("sign-in")}
+            style={{
+              borderBottom:
+                selectedTab === "sign-in" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "sign-in" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Sign In{" "}
+          </Link>
+        )}
+        {!loggedIn && (
+          <Link
+            to="/sign-up"
+            onClick={() => setSelectedTab("sign-up")}
+            style={{
+              borderBottom:
+                selectedTab === "sign-up" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "sign-up" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Sign Up{" "}
+          </Link>
+        )}
+        {loggedIn && (
+          <Link
+            to="/savedRecipes"
+            onClick={() => setSelectedTab("saved-recipes")}
+            style={{
+              borderBottom:
+                selectedTab === "saved-recipes"
+                  ? "3px solid rgb(0, 0, 0)"
+                  : "none",
+              color:
+                selectedTab === "saved-recipes"
+                  ? "rgb(0, 0, 0)"
+                  : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Saved Recipes{" "}
+          </Link>
+        )}
+        {loggedIn && (
+          <Link
+            to="/Pantry"
+            onClick={() => setSelectedTab("pantry")}
+            style={{
+              borderBottom:
+                selectedTab === "pantry" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "pantry" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Pantry{" "}
+          </Link>
+        )}
         {loggedIn && <LogoutButton onClick={logoutHandler} />}
         <button className="reOrder" onClick={toggleNavbar}>
           <ReorderIcon />

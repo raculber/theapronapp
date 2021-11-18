@@ -16,7 +16,6 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Checkbox from "@mui/material/Checkbox";
 import CircularProgress from "@mui/material/CircularProgress";
-
 import "./Home.css";
 const Home = () => {
   const [recipes, setRecipes] = useState([]);
@@ -159,16 +158,6 @@ const Home = () => {
                   />
                 }
                 label="Vegan"
-              />
-              <FormControlLabel
-                control={
-                  <Radio
-                    value="vegetarian"
-                    onChange={dietChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Vegetarian"
               />
               <FormControlLabel
                 control={

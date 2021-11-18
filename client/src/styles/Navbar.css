@@ -25,11 +25,11 @@
   align-items: center;
   justify-content: center;
 }
-
 .navbar a {
   color: rgb(92, 89, 89);
   text-decoration: none;
   margin: 20px;
+  padding-bottom: 6px;
 }
 
 .navbar .rightSide .reOrder {
@@ -81,6 +81,9 @@
     display: none;
   }
 
+  .navbar .rightSide button {
+    display: none;
+  }
   .navbar .rightSide {
     justify-content: flex-end;
     padding-right: 50px;

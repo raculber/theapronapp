@@ -4,7 +4,6 @@ dotenv.config();
 
 const auth = async (req, res, next) => {
   let token = "";
-
   if (req.headers["access-token"]) token = req.headers["access-token"];
   else
     try {
