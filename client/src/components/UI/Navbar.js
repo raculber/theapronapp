@@ -12,7 +12,9 @@ import { createBrowserHistory } from "history";
 function Navbar(props) {
   const [openLinks, setOpenLinks] = useState(false);
   const history = createBrowserHistory({ forceRefresh: true });
-  const [selectedTab, setSelectedTab] = useState("home");
+  const [selectedTab, setSelectedTab] = useState(
+    props.pathName.replace("/", "")
+  );
   const [loggedIn, setLoggedIn] = useState(
     useSelector((state) => state.user.isLoggedIn)
   );
@@ -36,12 +38,11 @@ function Navbar(props) {
         <div className="hiddenLinks">
           <Link
             to="/"
-            onClick={() => setSelectedTab("home")}
+            onClick={() => setSelectedTab("")}
             style={{
               borderBottom:
-                selectedTab === "home" ? "3px solid rgb(0, 0, 0)" : "none",
-              color:
-                selectedTab === "home" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+                selectedTab === "" ? "3px solid rgb(0, 0, 0)" : "none",
+              color: selectedTab === "" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
             }}
           >
             {" "}
@@ -134,11 +135,11 @@ function Navbar(props) {
       <div className="rightSide">
         <Link
           to="/"
-          onClick={() => setSelectedTab("home")}
+          onClick={() => setSelectedTab("")}
           style={{
             borderBottom:
-              selectedTab === "home" ? "3px solid rgb(0, 0, 0)" : "none",
-            color: selectedTab === "home" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+              selectedTab === "" ? "3px solid rgb(0, 0, 0)" : "none",
+            color: selectedTab === "" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
           }}
         >
           {" "}

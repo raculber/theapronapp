@@ -94,7 +94,6 @@ const Home = () => {
     } else if (exclusions.seafood) {
       intoleranceFilter += ",seafood";
     }
-    console.log(intoleranceFilter);
     axios
       .get(
         "http://localhost:3001/api/get-recipes-by-query?number=100&search=" +
@@ -104,7 +103,6 @@ const Home = () => {
       )
       .then((res) => {
         setTotalRecipes(res.data.recipes.results);
-        console.log(res.data.recipes.results);
         setPageCount(Math.ceil(res.data.recipes.results.length / 20));
         setRecipes(res.data.recipes.results.slice(20 * (page - 1), 20 * page));
         setLoading(false);
@@ -135,6 +133,7 @@ const Home = () => {
             marginTop: 1,
             ["@media (max-width:830px)"]: {
               width: "50%",
+              marginLeft: "15px",
             },
           }}
         >

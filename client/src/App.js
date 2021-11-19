@@ -1,7 +1,7 @@
 import React from "react";
-import { useState, useEffect } from "react";
 import "./App.css";
-import axios from "axios";
+import { useLocation } from "react-router-dom";
+
 import Calendar from "./components/Calendar/Calendar";
 import Home from "./components/Home/Home";
 import Navbar from "./components/UI/Navbar";
@@ -10,13 +10,16 @@ import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
 import savedRecipes from "./components/SavedRecipes/savedRecipes";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
+import { Redirect } from "react-router";
 // App component
 function App() {
+  const location = useLocation();
+  console.log(location.pathname);
+
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        <Navbar pathName={location.pathname} />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/sign-in" exact component={SignIn} />
