@@ -137,14 +137,14 @@ export default function SignIn() {
                 autoComplete="current-password"
               />
               {errorMessage && (
-                <Typography component="h6" style={{ color: "red" }}>
+                <Typography variant="contained" style={{ color: "red" }}>
                   {errorMessage}
                 </Typography>
               )}
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               <Button
                 type="submit"
                 // http://localhost:3000
