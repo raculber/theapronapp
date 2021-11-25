@@ -89,7 +89,7 @@ export const getRandomRecipes = async (req, res) => {
       process.env.API_KEY +
       "&addRecipeNutrition=true&number=" +
       number +
-      "&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true",
+      "&addRecipeInformation=true&instructionsRequired=true",
     method: "GET",
   };
   const request = https.request(options, (response) => {
@@ -111,19 +111,16 @@ export const getRandomRecipes = async (req, res) => {
 };
 
 export const getRecipesByQuery = async (req, res) => {
-  console.log("In request");
   let number = req.query.number;
   let query = req.query.search;
   let diet = "";
   let intolerances = "";
-  console.log(req.query.intolerances);
   if (req.query.diet) {
     diet = "&diet=" + req.query.diet;
   }
   if (req.query.intolerances) {
-    intolerances = "&intolerences=" + req.query.intolerances;
+    intolerances = "&intolerances=" + req.query.intolerances;
   }
-  console.log(intolerances);
   const options = {
     hostname: "api.spoonacular.com",
     path:
@@ -131,7 +128,7 @@ export const getRecipesByQuery = async (req, res) => {
       process.env.API_KEY +
       "&addRecipeNutrition=true&number=" +
       number +
-      "&addRecipeInformation=true&instructionsRequired=true&includeIngredients=true" +
+      "&addRecipeInformation=true&instructionsRequired=true" +
       "&query=" +
       query +
       diet +

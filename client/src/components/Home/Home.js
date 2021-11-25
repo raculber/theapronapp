@@ -36,7 +36,6 @@ const Home = () => {
         .get("http://localhost:3001/api/get-random-recipes?number=100")
         .then((res) => {
           setTotalRecipes(res.data.recipes.results);
-          console.log(res.data.recipes.results);
           setRecipes(res.data.recipes.results.slice(0, 20));
           setLoading(false);
         })
@@ -49,7 +48,6 @@ const Home = () => {
 
   const pageChangeHandler = (event, value) => {
     setPage(value);
-    console.log(totalRecipes);
     if (value < 6) {
       setRecipes(totalRecipes.slice(20 * (value - 1), 20 * value));
     }
@@ -69,6 +67,8 @@ const Home = () => {
       setDiet("vegan");
     } else if (event.target.value == "vegetarian") {
       setDiet("vegetarian");
+    } else {
+      setDiet("none");
     }
   };
   const searchRecipes = (query) => {
@@ -81,7 +81,6 @@ const Home = () => {
       dietFilter = "&diet=vegetarian";
     }
     if (exclusions.glutenFree) {
-      console.log("Gluten Free");
       intoleranceFilter = "&intolerances=gluten";
     }
     if (exclusions.dairyFree && intoleranceFilter === "") {
@@ -128,11 +127,23 @@ const Home = () => {
         />
         <Accordion
           sx={{
-            width: "30%",
-            margin: 0,
+            width: "35%",
+            margin: 10,
             marginTop: 1,
-            ["@media (max-width:830px)"]: {
-              width: "50%",
+            ["@media (min-width:200px)"]: {
+              width: "90%",
+              marginLeft: "15px",
+            },
+            ["@media (min-width:400px)"]: {
+              width: "70%",
+              marginLeft: "15px",
+            },
+            ["@media (min-width:1000px)"]: {
+              width: "25%",
+              marginLeft: "15px",
+            },
+            ["@media (min-width:800px)"]: {
+              width: "30%",
               marginLeft: "15px",
             },
           }}
@@ -146,8 +157,18 @@ const Home = () => {
             <Typography>Filter Recipes</Typography>
           </AccordionSummary>
           <AccordionDetails sx={{ display: "flex", flexDirection: "row" }}>
-            <RadioGroup>
+            <RadioGroup defaultValue="none">
               <Typography>Diets</Typography>
+              <FormControlLabel
+                control={
+                  <Radio
+                    value="none"
+                    onChange={dietChangeHandler}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label="None"
+              />
               <FormControlLabel
                 control={
                   <Radio

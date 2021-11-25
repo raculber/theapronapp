@@ -20,6 +20,7 @@ import {
   deleteRecipeFromDate,
   getRecipesByDate,
 } from "../controllers/calendar.js";
+import { addList, deleteList } from "../controllers/grocery-list.js";
 import auth from "../middleware/auth.js";
 
 const router = express.Router();
@@ -41,4 +42,7 @@ router.get("/api/get-recipes-by-query", getRecipesByQuery);
 router.post("/api/add-recipe-to-date", auth, addRecipeToDate);
 router.delete("/api/delete-recipe-from-date", auth, deleteRecipeFromDate);
 router.get("/api/get-recipes-by-date", auth, getRecipesByDate);
+
+router.post("/api/add-grocery-list", auth, addList);
+router.delete("/api/delete-grocery-list", auth, deleteList);
 export default router;
