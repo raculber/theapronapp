@@ -3,7 +3,10 @@ import { Fragment } from "react";
 import { useSelector } from "react-redux";
 
 const GroceryLists = (props) => {
-  let items = [{ id: 1, name: "banana", amount: 10, unit: "" }];
+  let items = [
+    { id: 1, name: "banana", amount: 10, unit: "" },
+    { id: 2, name: "bread", amount: -1, unit: "" },
+  ];
   const userId = useSelector((state) => state.user.userId);
 
   const addGroceryList = () => {
