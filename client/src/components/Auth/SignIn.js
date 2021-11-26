@@ -53,6 +53,8 @@ export default function SignIn() {
       enteredEmail: data.get("email"),
       enteredPassword: data.get("password"),
     };
+    console.log(userInfo.enteredEmail);
+    console.log(userInfo.enteredPassword);
     axios
       .post("http://localhost:3001/api/sign-in", userInfo)
       .then((res) => {
