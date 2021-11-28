@@ -51,9 +51,8 @@ export const getLists = async (req, res) => {
 };
 
 export const updateList = async (req, res) => {
-  let userId = req.query.userId;
-  let items = req.query.items;
-  await GroceryList.updateOne(
+  let { userId, items, listName } = req.body;
+  let updatedList = await GroceryList.updateOne(
     { userId: userId, groceryLists: { $elemMatch: { name: listName } } },
     {
       $set: {
@@ -61,6 +60,58 @@ export const updateList = async (req, res) => {
       },
     }
   );
+  if (!updatedList) {
+    res.json({ message: "Unable to update list" });
+  }
+  res.json({ result: updatedList });
+};
+
+export const aggregateList = async (req, res) => {
+  let { userId, recipes } = req.body;
+  let grocerylist = [];
+  const ingredientMap = new Map();
+
+  recipes.forEach((recipe) => {
+    recipe.forEach((ingredient) => {
+      if (!ingredientMap.get(ingredient.name)) {
+        ingredientMap.set(ingredient.name, ingredient.amount);
+      }
+    });
+  });
+  let index = 1;
+  for (var ingredient of ingredientMap.entries()) {
+    let id = index;
+    let key = ingredient[0];
+    let value = ingredient[1];
+    let capitalizedName = key.charAt(0).toUpperCase() + key.slice(1);
+    grocerylist.push({ id: id, name: capitalizedName, amount: 0, unit: "" });
+    index++;
+  }
+  let listName = "Grocery List 1";
+  const userExists = await GroceryList.exists({
+    userId: userId,
+  });
+  //Create new user if user does not exist
+  //Otherwise, add to existing array
+  if (!userExists) {
+    let userLists = new GroceryList({
+      userId: userId,
+      groceryLists: [{ name: listName, items: grocerylist }],
+    });
+    userLists.save();
+  } else {
+    let userLists = await GroceryList.findOne({
+      userId: userId,
+    });
+    let listNum = userLists.groceryLists.length + 1;
+    listName = "Grocery List " + listNum;
+    userLists.groceryLists.push({
+      name: listName,
+      items: grocerylist,
+    });
+    userLists.save();
+    res.json({ list: grocerylist });
+  }
 };
 
 export const addList = async (req, res) => {
@@ -87,7 +138,6 @@ export const addList = async (req, res) => {
     let userLists = await GroceryList.findOne({
       userId: userId,
     });
-    console.log(userLists.groceryLists.length);
     let listNum = userLists.groceryLists.length + 1;
     listName = "Grocery List " + listNum;
     userLists.groceryLists.push({

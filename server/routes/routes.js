@@ -22,6 +22,7 @@ import {
 } from "../controllers/calendar.js";
 import {
   addList,
+  aggregateList,
   deleteList,
   getLists,
   updateList,
@@ -52,4 +53,5 @@ router.post("/api/add-grocery-list", auth, addList);
 router.delete("/api/delete-grocery-list", auth, deleteList);
 router.get("/api/get-grocery-lists", auth, getLists);
 router.put("/api/update-grocery-list", auth, updateList);
+router.post("/api/aggregate-grocery-lists", auth, aggregateList);
 export default router;
