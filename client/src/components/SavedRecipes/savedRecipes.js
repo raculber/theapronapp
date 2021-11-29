@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 import RecipeCard from "../Recipe/RecipeCard";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -17,7 +18,23 @@ const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const theme = createTheme();
 
-export default function savedRecipes() {
+export default function SavedRecipes() {
+  const userId = useSelector((state) => state.user.userId);
+  const getSavedRecipes = () => {
+    axios
+      .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
