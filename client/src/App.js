@@ -10,7 +10,6 @@ import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
 import savedRecipes from "./components/SavedRecipes/savedRecipes";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Profile from "./components/Auth/Profile";
 
 // App component
 function App() {
@@ -25,7 +24,6 @@ function App() {
           <Route path="/pantry" exact component={Pantry} />
           <Route path="/savedRecipes" exact component={savedRecipes} />
           <Route path="/calendar" exact component={Calendar} />
-          <Route path="/profile" exact component={Profile} />
         </Switch>
       </Router>
     </div>
