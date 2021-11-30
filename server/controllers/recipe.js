@@ -8,7 +8,7 @@ export const saveRecipe = async (req, res) => {
     userId,
     id,
     title,
-    ingredients,
+    extendedIngredients,
     vegetarian,
     vegan,
     glutenFree,
@@ -20,6 +20,7 @@ export const saveRecipe = async (req, res) => {
     instructions,
     nutrients,
     readyInMinutes,
+    servings,
   } = req.body;
   const recipeExists = await Recipe.exists({
     userId: userId,
@@ -31,7 +32,7 @@ export const saveRecipe = async (req, res) => {
       userId: userId,
       id: id,
       title: title,
-      ingredients: ingredients,
+      extendedIngredients: extendedIngredients,
       vegetarian: vegetarian,
       vegan: vegan,
       glutenFree: glutenFree,
@@ -43,6 +44,7 @@ export const saveRecipe = async (req, res) => {
       instructions: instructions,
       nutrients: nutrients,
       readyInMinutes: readyInMinutes,
+      servings: servings,
     });
     recipe.save();
     res.json({ message: "Added to favorites" });

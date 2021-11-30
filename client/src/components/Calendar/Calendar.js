@@ -2,15 +2,22 @@ import React from "react";
 
 import moment from "moment";
 import RecipeCard from "../Recipe/RecipeCard";
-
+import CalendarModal from "./CalendarModal";
+import axios from "axios";
+import recipe2 from "../Recipe/recipe2";
+import recipe from "../Recipe/recipe";
+import { connect } from "react-redux";
 import "./Calendar.css";
 
-export default class Calendar extends React.Component {
+class Calendar extends React.Component {
+  userId = this.props.userId;
+
   state = {
     dateObject: moment(),
     allMonths: moment.months(),
-
+    showModal: false,
     showMonthTable: false,
+    recipes: [],
     showYearTable: false,
     showDateTable: true,
     selectedDay: null,
@@ -90,7 +97,37 @@ export default class Calendar extends React.Component {
       {
         selectedDay: d,
       },
-      () => console.log(`SELECTED DAY: ${this.state.selectedDay}`)
+      () => {
+        const year = this.state.dateObject._d.getFullYear();
+        let day = d;
+        if (day < 10) {
+          day = "0" + day;
+        }
+        const month = this.state.dateObject._d.getMonth();
+        const date = month + "/" + day + "/" + year;
+        axios
+          .get(
+            "http://localhost:3001/api/get-recipes-by-date?userId=" +
+              this.userId +
+              "&date=" +
+              date,
+            {
+              headers: {
+                "access-token": localStorage.getItem("token"),
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            this.setState({
+              recipes: res.data.recipes,
+              showModal: true,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     );
   };
 
@@ -115,6 +152,12 @@ export default class Calendar extends React.Component {
     }
     this.setState({
       dateObject: this.state.dateObject.add(1, curr),
+    });
+  };
+
+  hideModal = () => {
+    this.setState({
+      showModal: false,
     });
   };
 
@@ -192,6 +235,12 @@ export default class Calendar extends React.Component {
 
     return (
       <div className="tail-datetime-calendar">
+        {this.state.showModal && (
+          <CalendarModal
+            onClose={this.hideModal}
+            recipes={this.state.recipes}
+          />
+        )}
         <div className="calendar-navi">
           <span onClick={this.onPrev} className="calendar-button button-prev" />
           <span
@@ -226,3 +275,10 @@ export default class Calendar extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    userId: state.user.userId,
+  };
+};
+
+export default connect(mapStateToProps)(Calendar);

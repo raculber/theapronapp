@@ -1,5 +1,5 @@
 import express from "express";
-
+import moment from "moment";
 import Calendar from "../models/calendar.js";
 
 const router = express.Router();
@@ -19,22 +19,23 @@ export const addRecipeToDate = async (req, res) => {
       userId: userId,
     });
   }
-  if (calendarUser.recipes.length < 5) {
-    const recipeExists = await Calendar.exists({
-      userId: userId,
-      recipes: {
-        $elemMatch: { date: date },
-      },
-      recipe: { id: recipe.id },
-    });
-    console.log(recipeExists);
-    if (!recipeExists) {
+  let recipeId = recipe.id;
+  let duplicateRecipe = false;
+  let countRecipes = 0;
+  calendarUser.recipes.forEach((recipe) => {
+    let formattedDate = moment(recipe.date).format("MM/DD/YYYY");
+    if (formattedDate == date) countRecipes++;
+    if (formattedDate == date && recipe.recipe.id == recipeId)
+      duplicateRecipe = true;
+  });
+  if (countRecipes < 5) {
+    if (!duplicateRecipe) {
       calendarUser.recipes.push({
         date: date,
         recipe: {
           id: recipe.id,
           title: recipe.title,
-          ingredients: recipe.ingredients,
+          extendedIngredients: recipe.ingredients,
           vegetarian: recipe.vegetarian,
           vegan: recipe.vegan,
           glutenFree: recipe.glutenFree,
@@ -46,6 +47,7 @@ export const addRecipeToDate = async (req, res) => {
           instructions: recipe.instructions,
           nutrients: recipe.nutrients,
           readyInMinutes: recipe.readyInMinutes,
+          servings: recipe.servings,
         },
       });
       res.status(200).json({
@@ -88,22 +90,24 @@ export const getRecipesByDate = async (req, res) => {
   let date = req.query.date;
   const calendarUser = await Calendar.findOne({
     userId: userId,
-    recipes: {
-      $elemMatch: { date: date },
-    },
   });
-  if (!calendarUser.recipes) {
+  console.log(calendarUser.recipes);
+  if (!calendarUser) {
+    res.json({ message: "No recipes found" });
+  } else if (!calendarUser.recipes) {
     res.json({ message: "No recipes found" });
   } else if (calendarUser.recipes.length == 0) {
     res.json({ message: "No recipes found" });
   } else {
     let recipeArray = [];
     for (let i = 0; i < calendarUser.recipes.length; i++) {
-      recipeArray.push(calendarUser.recipes[i].recipe);
+      let formattedDate = moment(calendarUser.recipes[i].date).format(
+        "MM/DD/YYYY"
+      );
+      if (formattedDate == date)
+        recipeArray.push(calendarUser.recipes[i].recipe);
     }
     res.json({ recipes: recipeArray });
   }
-
-  console.log(calendarUser);
 };
 export default router;
