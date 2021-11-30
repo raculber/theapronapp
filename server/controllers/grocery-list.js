@@ -50,6 +50,20 @@ export const getLists = async (req, res) => {
   else res.json({ lists: userLists.groceryLists });
 };
 
+//Get a single grocery list based on name
+export const getList = async (req, res) => {
+  let userId = req.query.userId;
+  let listName = req.query.listName;
+  const userLists = await GroceryList.findOne({
+    userId: userId,
+  });
+  console.log(userLists);
+  userLists.groceryLists.forEach((list) => {
+    if (list.name == listName) res.json({ list: list });
+  });
+  res.json({ message: "No list found" });
+};
+
 export const updateList = async (req, res) => {
   let { userId, items, listName } = req.body;
   let updatedList = await GroceryList.updateOne(
@@ -62,8 +76,9 @@ export const updateList = async (req, res) => {
   );
   if (!updatedList) {
     res.json({ message: "Unable to update list" });
+  } else {
+    res.json({ result: updatedList });
   }
-  res.json({ result: updatedList });
 };
 
 export const aggregateList = async (req, res) => {
@@ -98,7 +113,8 @@ export const aggregateList = async (req, res) => {
       userId: userId,
       groceryLists: [{ name: listName, items: grocerylist }],
     });
-    userLists.save();
+    await userLists.save();
+    res.json({ list: grocerylist });
   } else {
     let userLists = await GroceryList.findOne({
       userId: userId,
@@ -109,9 +125,10 @@ export const aggregateList = async (req, res) => {
       name: listName,
       items: grocerylist,
     });
-    userLists.save();
+    await userLists.save();
     res.json({ list: grocerylist });
   }
+  res.json({ message: "Error adding list" });
 };
 
 export const addList = async (req, res) => {
@@ -133,7 +150,8 @@ export const addList = async (req, res) => {
       userId: userId,
       groceryLists: [{ name: listName, items: items }],
     });
-    userLists.save();
+    await userLists.save();
+    res.json({ list: [{ name: listName, items: items }] });
   } else {
     let userLists = await GroceryList.findOne({
       userId: userId,
@@ -144,8 +162,10 @@ export const addList = async (req, res) => {
       name: listName,
       items: items,
     });
-    userLists.save();
+    await userLists.save();
+    res.json({ list: [{ name: listName, items: items }] });
   }
+  res.json({ message: "Error adding list" });
 };
 
 export default router;

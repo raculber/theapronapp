@@ -24,6 +24,7 @@ import {
   addList,
   aggregateList,
   deleteList,
+  getList,
   getLists,
   updateList,
 } from "../controllers/grocery-list.js";
@@ -52,6 +53,7 @@ router.get("/api/get-recipes-by-date", auth, getRecipesByDate);
 router.post("/api/add-grocery-list", auth, addList);
 router.delete("/api/delete-grocery-list", auth, deleteList);
 router.get("/api/get-grocery-lists", auth, getLists);
+router.get("/api/get-grocery-list", auth, getList);
 router.put("/api/update-grocery-list", auth, updateList);
 router.post("/api/aggregate-grocery-lists", auth, aggregateList);
 export default router;

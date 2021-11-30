@@ -36,6 +36,41 @@ const GroceryLists = (props) => {
       });
   };
 
+  const getGroceryLists = () => {
+    axios
+      .get("http://localhost:3001/api/get-grocery-lists?userId=" + userId, {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const getGroceryList = () => {
+    axios
+      .get(
+        "http://localhost:3001/api/get-grocery-list?userId=" +
+          userId +
+          "&listName=Grocery List 2",
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const deleteList = () => {
     axios
       .delete("http://localhost:3001/api/delete-grocery-list", {
@@ -104,9 +139,12 @@ const GroceryLists = (props) => {
   return (
     <Fragment>
       <button onClick={addGroceryList}>Add List</button>
+      <button onClick={updateList}>Update List</button>
       <button onClick={deleteList}>Delete List</button>
       <button onClick={updateList}>Update List</button>
       <button onClick={aggregateList}>Aggregate List</button>
+      <button onClick={getGroceryLists}>Get Grocery Lists</button>
+      <button onClick={getGroceryList}>Get Grocery List</button>
     </Fragment>
   );
 };

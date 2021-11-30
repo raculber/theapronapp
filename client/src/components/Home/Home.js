@@ -6,6 +6,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import RecipeCard from "../Recipe/RecipeCard";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -21,6 +22,9 @@ const Home = () => {
   const [recipes, setRecipes] = useState([]);
   const [totalRecipes, setTotalRecipes] = useState([]);
   const [pageCount, setPageCount] = useState(5);
+  const [loggedIn, setLoggedIn] = useState(
+    useSelector((state) => state.user.isLoggedIn)
+  );
   const [page, setPage] = useState(1);
   const [diet, setDiet] = useState("");
   const [exclusions, setExclusions] = useState({
@@ -29,6 +33,7 @@ const Home = () => {
     seafood: false,
   });
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (totalRecipes.length === 0) {
       setLoading(true);
@@ -114,118 +119,120 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="search">
-        <SearchBar
-          style={{
-            width: "50%",
-            margin: 10,
-            marginLeft: 15,
-          }}
-          onRequestSearch={(value) => {
-            searchRecipes(value);
-          }}
-        />
-        <Accordion
-          sx={{
-            width: "35%",
-            margin: 10,
-            marginTop: 1,
-            ["@media (min-width:200px)"]: {
-              width: "90%",
-              marginLeft: "15px",
-            },
-            ["@media (min-width:400px)"]: {
-              width: "70%",
-              marginLeft: "15px",
-            },
-            ["@media (min-width:1000px)"]: {
-              width: "25%",
-              marginLeft: "15px",
-            },
-            ["@media (min-width:800px)"]: {
-              width: "30%",
-              marginLeft: "15px",
-            },
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            sx={{ padding: 0, marginLeft: 1 }}
+      {loggedIn && (
+        <div className="search">
+          <SearchBar
+            style={{
+              width: "50%",
+              margin: 10,
+              marginLeft: 15,
+            }}
+            onRequestSearch={(value) => {
+              searchRecipes(value);
+            }}
+          />
+          <Accordion
+            sx={{
+              width: "35%",
+              margin: 10,
+              marginTop: 1,
+              ["@media (min-width:200px)"]: {
+                width: "90%",
+                marginLeft: "15px",
+              },
+              ["@media (min-width:400px)"]: {
+                width: "70%",
+                marginLeft: "15px",
+              },
+              ["@media (min-width:1000px)"]: {
+                width: "25%",
+                marginLeft: "15px",
+              },
+              ["@media (min-width:800px)"]: {
+                width: "30%",
+                marginLeft: "15px",
+              },
+            }}
           >
-            <Typography>Filter Recipes</Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ display: "flex", flexDirection: "row" }}>
-            <RadioGroup defaultValue="none">
-              <Typography>Diets</Typography>
-              <FormControlLabel
-                control={
-                  <Radio
-                    value="none"
-                    onChange={dietChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="None"
-              />
-              <FormControlLabel
-                control={
-                  <Radio
-                    value="vegan"
-                    onChange={dietChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Vegan"
-              />
-              <FormControlLabel
-                control={
-                  <Radio
-                    value="vegetarian"
-                    onChange={dietChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Vegetarian"
-              />
-            </RadioGroup>
-            <FormGroup>
-              <Typography>Exclusions</Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="glutenFree"
-                    onChange={exlcusionsChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Gluten Free"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="dairyFree"
-                    onChange={exlcusionsChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Dairy Free"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="seafood"
-                    onChange={exlcusionsChangeHandler}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label="Seafood"
-              />
-            </FormGroup>
-          </AccordionDetails>
-        </Accordion>
-      </div>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              sx={{ padding: 0, marginLeft: 1 }}
+            >
+              <Typography>Filter Recipes</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ display: "flex", flexDirection: "row" }}>
+              <RadioGroup defaultValue="none">
+                <Typography>Diets</Typography>
+                <FormControlLabel
+                  control={
+                    <Radio
+                      value="none"
+                      onChange={dietChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="None"
+                />
+                <FormControlLabel
+                  control={
+                    <Radio
+                      value="vegan"
+                      onChange={dietChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Vegan"
+                />
+                <FormControlLabel
+                  control={
+                    <Radio
+                      value="vegetarian"
+                      onChange={dietChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Vegetarian"
+                />
+              </RadioGroup>
+              <FormGroup>
+                <Typography>Exclusions</Typography>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="glutenFree"
+                      onChange={exlcusionsChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Gluten Free"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="dairyFree"
+                      onChange={exlcusionsChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Dairy Free"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="seafood"
+                      onChange={exlcusionsChangeHandler}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  }
+                  label="Seafood"
+                />
+              </FormGroup>
+            </AccordionDetails>
+          </Accordion>
+        </div>
+      )}
       {loading && (
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       )}
