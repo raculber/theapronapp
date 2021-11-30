@@ -1,13 +1,14 @@
 import React from "react";
 
 import moment from "moment";
-import RecipeCard from "../Recipe/RecipeCard";
+import CustomRecipeCard from "../Recipe/RecipeCard";
 import CalendarModal from "./CalendarModal";
 import axios from "axios";
 import recipe2 from "../Recipe/recipe2";
 import recipe from "../Recipe/recipe";
 import { connect } from "react-redux";
 import "./Calendar.css";
+import RecipesByDay from "./RecipesByDay";
 
 class Calendar extends React.Component {
   userId = this.props.userId;
@@ -16,7 +17,9 @@ class Calendar extends React.Component {
     dateObject: moment(),
     allMonths: moment.months(),
     showModal: false,
+    showRecipes: false,
     showMonthTable: false,
+    selectedDate: "",
     recipes: [],
     showYearTable: false,
     showDateTable: true,
@@ -121,7 +124,9 @@ class Calendar extends React.Component {
             console.log(res);
             this.setState({
               recipes: res.data.recipes,
-              showModal: true,
+              // showModal: true,
+              selectedDate: date,
+              showRecipes: true,
             });
           })
           .catch((err) => {
@@ -234,43 +239,58 @@ class Calendar extends React.Component {
     const monthWeeks = rows.map((week, i) => <tr key={i}>{week}</tr>);
 
     return (
-      <div className="tail-datetime-calendar">
-        {this.state.showModal && (
-          <CalendarModal
-            onClose={this.hideModal}
-            recipes={this.state.recipes}
-          />
-        )}
-        <div className="calendar-navi">
-          <span onClick={this.onPrev} className="calendar-button button-prev" />
-          <span
-            data-tail-navi="switch"
-            className="calendar-label"
-            onClick={this.showMonth}
-          >
-            {this.month()}, {this.state.selectedDay}
-          </span>
-          <span className="calendar-label">{this.year()}</span>
-          <span onClick={this.onNext} className="calendar-button button-next" />
-        </div>
-        <div className="calendar-date">
+      <div>
+        <div className="tail-datetime-calendar">
+          {this.state.showModal && (
+            <CalendarModal
+              onClose={this.hideModal}
+              recipes={this.state.recipes}
+            />
+          )}
+          <div className="calendar-navi">
+            <span
+              onClick={this.onPrev}
+              className="calendar-button button-prev"
+            />
+            <span
+              data-tail-navi="switch"
+              className="calendar-label"
+              onClick={this.showMonth}
+            >
+              {this.month()}, {this.state.selectedDay}
+            </span>
+            <span className="calendar-label">{this.year()}</span>
+            <span
+              onClick={this.onNext}
+              className="calendar-button button-next"
+            />
+          </div>
           <div className="calendar-date">
-            {this.state.showYearTable && (
-              <this.YearTable currYear={this.year()} />
-            )}
-            {this.state.showMonthTable && (
-              <this.MonthList data={this.state.allMonths} />
+            <div className="calendar-date">
+              {this.state.showYearTable && (
+                <this.YearTable currYear={this.year()} />
+              )}
+              {this.state.showMonthTable && (
+                <this.MonthList data={this.state.allMonths} />
+              )}
+            </div>
+            {this.state.showDateTable && (
+              <table className="calendar-day">
+                <thead>
+                  <tr>{weekdayshortname}</tr>
+                </thead>
+                <tbody>{monthWeeks}</tbody>
+              </table>
             )}
           </div>
-          {this.state.showDateTable && (
-            <table className="calendar-day">
-              <thead>
-                <tr>{weekdayshortname}</tr>
-              </thead>
-              <tbody>{monthWeeks}</tbody>
-            </table>
-          )}
         </div>
+        {this.state.showRecipes && (
+          <RecipesByDay
+            recipes={this.state.recipes}
+            date={this.state.selectedDate}
+            key={recipe.id}
+          />
+        )}
       </div>
     );
   }
