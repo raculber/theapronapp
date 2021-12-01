@@ -1,16 +1,26 @@
 import React from "react";
 
 import moment from "moment";
-import RecipeCard from "../Recipe/RecipeCard";
-
+import CustomRecipeCard from "../Recipe/RecipeCard";
+import CalendarModal from "./CalendarModal";
+import axios from "axios";
+import recipe2 from "../Recipe/recipe2";
+import recipe from "../Recipe/recipe";
+import { connect } from "react-redux";
 import "./Calendar.css";
+import RecipesByDay from "./RecipesByDay";
 
-export default class Calendar extends React.Component {
+class Calendar extends React.Component {
+  userId = this.props.userId;
+
   state = {
     dateObject: moment(),
     allMonths: moment.months(),
-
+    showModal: false,
+    showRecipes: false,
     showMonthTable: false,
+    selectedDate: "",
+    recipes: [],
     showYearTable: false,
     showDateTable: true,
     selectedDay: null,
@@ -90,7 +100,39 @@ export default class Calendar extends React.Component {
       {
         selectedDay: d,
       },
-      () => console.log(`SELECTED DAY: ${this.state.selectedDay}`)
+      () => {
+        const year = this.state.dateObject._d.getFullYear();
+        let day = d;
+        if (day < 10) {
+          day = "0" + day;
+        }
+        const month = this.state.dateObject._d.getMonth();
+        const date = month + "/" + day + "/" + year;
+        axios
+          .get(
+            "http://localhost:3001/api/get-recipes-by-date?userId=" +
+              this.userId +
+              "&date=" +
+              date,
+            {
+              headers: {
+                "access-token": localStorage.getItem("token"),
+              },
+            }
+          )
+          .then((res) => {
+            console.log(res);
+            this.setState({
+              recipes: res.data.recipes,
+              // showModal: true,
+              selectedDate: date,
+              showRecipes: true,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     );
   };
 
@@ -115,6 +157,12 @@ export default class Calendar extends React.Component {
     }
     this.setState({
       dateObject: this.state.dateObject.add(1, curr),
+    });
+  };
+
+  hideModal = () => {
+    this.setState({
+      showModal: false,
     });
   };
 
@@ -191,38 +239,66 @@ export default class Calendar extends React.Component {
     const monthWeeks = rows.map((week, i) => <tr key={i}>{week}</tr>);
 
     return (
-      <div className="tail-datetime-calendar">
-        <div className="calendar-navi">
-          <span onClick={this.onPrev} className="calendar-button button-prev" />
-          <span
-            data-tail-navi="switch"
-            className="calendar-label"
-            onClick={this.showMonth}
-          >
-            {this.month()}, {this.state.selectedDay}
-          </span>
-          <span className="calendar-label">{this.year()}</span>
-          <span onClick={this.onNext} className="calendar-button button-next" />
-        </div>
-        <div className="calendar-date">
+      <div>
+        <div className="tail-datetime-calendar">
+          {this.state.showModal && (
+            <CalendarModal
+              onClose={this.hideModal}
+              recipes={this.state.recipes}
+            />
+          )}
+          <div className="calendar-navi">
+            <span
+              onClick={this.onPrev}
+              className="calendar-button button-prev"
+            />
+            <span
+              data-tail-navi="switch"
+              className="calendar-label"
+              onClick={this.showMonth}
+            >
+              {this.month()}, {this.state.selectedDay}
+            </span>
+            <span className="calendar-label">{this.year()}</span>
+            <span
+              onClick={this.onNext}
+              className="calendar-button button-next"
+            />
+          </div>
           <div className="calendar-date">
-            {this.state.showYearTable && (
-              <this.YearTable currYear={this.year()} />
-            )}
-            {this.state.showMonthTable && (
-              <this.MonthList data={this.state.allMonths} />
+            <div className="calendar-date">
+              {this.state.showYearTable && (
+                <this.YearTable currYear={this.year()} />
+              )}
+              {this.state.showMonthTable && (
+                <this.MonthList data={this.state.allMonths} />
+              )}
+            </div>
+            {this.state.showDateTable && (
+              <table className="calendar-day">
+                <thead>
+                  <tr>{weekdayshortname}</tr>
+                </thead>
+                <tbody>{monthWeeks}</tbody>
+              </table>
             )}
           </div>
-          {this.state.showDateTable && (
-            <table className="calendar-day">
-              <thead>
-                <tr>{weekdayshortname}</tr>
-              </thead>
-              <tbody>{monthWeeks}</tbody>
-            </table>
-          )}
         </div>
+        {this.state.showRecipes && (
+          <RecipesByDay
+            recipes={this.state.recipes}
+            date={this.state.selectedDate}
+            key={recipe.id}
+          />
+        )}
       </div>
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    userId: state.user.userId,
+  };
+};
+
+export default connect(mapStateToProps)(Calendar);
