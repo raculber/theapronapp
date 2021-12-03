@@ -34,6 +34,8 @@ export const createUser = async (req, res) => {
         userId: userId,
         email: enteredEmail,
         password: securedPass,
+        image:
+          "https://th.bing.com/th/id/R.8f185ac6c4a78763aa31acf73ee3e46b?rik=X7w93PUB4j3AXg&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_568656.png&ehk=YMUL5OvijifwVr2xWFpqoEf4STb07PZwQdnl0ispWMc%3d&risl=&pid=ImgRaw&r=0",
       });
       user.save();
       const accessToken = jwt.sign({ userId }, process.env.TOKEN_KEY, {
@@ -47,6 +49,16 @@ export const createUser = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: error });
     }
+  }
+};
+
+export const updateUserPicture = async (req, res) => {
+  let { userId, image } = req.body;
+  updatedUser = await User.updateOne({ userId: userId }, { image: image });
+  if (!updatedUser) {
+    res.json({ message: "Error updating image" });
+  } else {
+    res.json({ image: image });
   }
 };
 
