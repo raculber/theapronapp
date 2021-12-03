@@ -84,7 +84,7 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
-              to="/savedRecipes"
+              to="/SavedRecipes"
               onClick={() => setSelectedTab("saved-recipes")}
               style={{
                 borderBottom:
@@ -202,7 +202,7 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
-            to="/savedRecipes"
+            to="/SavedRecipes"
             onClick={() => setSelectedTab("saved-recipes")}
             style={{
               borderBottom:

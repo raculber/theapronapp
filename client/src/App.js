@@ -9,7 +9,7 @@ import Navbar from "./components/UI/Navbar";
 import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
-import SavedRecipes from "./components/SavedRecipes/savedRecipes";
+import SavedRecipes from "./components/SavedRecipes/SavedRecipes";
 import GroceryLists from "./components/GroceryLists/GroceryLists";
 
 // App component
