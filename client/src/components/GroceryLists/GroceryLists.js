@@ -139,7 +139,6 @@ const GroceryLists = (props) => {
   return (
     <Fragment>
       <button onClick={addGroceryList}>Add List</button>
-      <button onClick={updateList}>Update List</button>
       <button onClick={deleteList}>Delete List</button>
       <button onClick={updateList}>Update List</button>
       <button onClick={aggregateList}>Aggregate List</button>

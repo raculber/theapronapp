@@ -106,7 +106,7 @@ class Calendar extends React.Component {
         if (day < 10) {
           day = "0" + day;
         }
-        const month = this.state.dateObject._d.getMonth();
+        const month = this.state.dateObject._d.getMonth() + 1;
         const date = month + "/" + day + "/" + year;
         axios
           .get(
