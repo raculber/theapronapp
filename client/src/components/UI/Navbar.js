@@ -84,7 +84,6 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
-<<<<<<< HEAD
               to="/Profile"
               onClick={() => setSelectedTab("profile")}
               style={{
@@ -105,9 +104,7 @@ function Navbar(props) {
           {loggedIn && (
             <Link
               to="/savedRecipes"
-=======
               to="/SavedRecipes"
->>>>>>> origin/main
               onClick={() => setSelectedTab("saved-recipes")}
               style={{
                 borderBottom:
@@ -244,7 +241,6 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
-<<<<<<< HEAD
             to="/Profile"
             onClick={() => setSelectedTab("profile")}
             style={{
@@ -254,7 +250,16 @@ function Navbar(props) {
                   : "none",
               color:
                 selectedTab === "profile"
-=======
+                ? "rgb(0, 0, 0)"
+                : "rgb(92, 89, 89)",
+          }}
+        >
+          {" "}
+          Profile{" "}
+        </Link>
+      )}
+        {loggedIn && (
+          <Link        
             to="/grocery-lists"
             onClick={() => setSelectedTab("grocery-lists")}
             style={{
@@ -264,17 +269,12 @@ function Navbar(props) {
                   : "none",
               color:
                 selectedTab === "grocery-lists"
->>>>>>> origin/main
                   ? "rgb(0, 0, 0)"
                   : "rgb(92, 89, 89)",
             }}
           >
             {" "}
-<<<<<<< HEAD
-            Profile{" "}
-=======
             Grocery Lists{" "}
->>>>>>> origin/main
           </Link>
         )}
         {loggedIn && (
