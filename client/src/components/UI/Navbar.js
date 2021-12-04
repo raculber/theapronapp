@@ -84,6 +84,25 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
+              to="/Profile"
+              onClick={() => setSelectedTab("profile")}
+              style={{
+                borderBottom:
+                  selectedTab === "profile"
+                    ? "3px solid rgb(0, 0, 0)"
+                    : "none",
+                color:
+                  selectedTab === "profile"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Profile{" "}
+            </Link>
+          )}
+          {loggedIn && (
+            <Link
               to="/savedRecipes"
               onClick={() => setSelectedTab("saved-recipes")}
               style={{
@@ -192,6 +211,25 @@ function Navbar(props) {
           >
             {" "}
             Saved Recipes{" "}
+          </Link>
+        )}
+        {loggedIn && (
+          <Link
+            to="/Profile"
+            onClick={() => setSelectedTab("profile")}
+            style={{
+              borderBottom:
+                selectedTab === "profile"
+                  ? "3px solid rgb(0, 0, 0)"
+                  : "none",
+              color:
+                selectedTab === "profile"
+                  ? "rgb(0, 0, 0)"
+                  : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Profile{" "}
           </Link>
         )}
         {loggedIn && (
