@@ -84,6 +84,7 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
+<<<<<<< HEAD
               to="/Profile"
               onClick={() => setSelectedTab("profile")}
               style={{
@@ -104,6 +105,9 @@ function Navbar(props) {
           {loggedIn && (
             <Link
               to="/savedRecipes"
+=======
+              to="/SavedRecipes"
+>>>>>>> origin/main
               onClick={() => setSelectedTab("saved-recipes")}
               style={{
                 borderBottom:
@@ -122,6 +126,25 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
+              to="/grocery-lists"
+              onClick={() => setSelectedTab("grocery-lists")}
+              style={{
+                borderBottom:
+                  selectedTab === "grocery-lists"
+                    ? "3px solid rgb(0, 0, 0)"
+                    : "none",
+                color:
+                  selectedTab === "grocery-lists"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Grocery Lists{" "}
+            </Link>
+          )}
+          {loggedIn && (
+            <Link
               to="/Pantry"
               onClick={() => setSelectedTab("pantry")}
               style={{
@@ -135,19 +158,25 @@ function Navbar(props) {
               Pantry{" "}
             </Link>
           )}
-          <Link
-            to="/calendar"
-            onClick={() => setSelectedTab("calendar")}
-            style={{
-              borderBottom:
-                selectedTab === "calendar" ? "3px solid rgb(0, 0, 0)" : "none",
-              color:
-                selectedTab === "calendar" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
-            }}
-          >
-            {" "}
-            Calendar{" "}
-          </Link>
+          {loggedIn && (
+            <Link
+              to="/calendar"
+              onClick={() => setSelectedTab("calendar")}
+              style={{
+                borderBottom:
+                  selectedTab === "calendar"
+                    ? "3px solid rgb(0, 0, 0)"
+                    : "none",
+                color:
+                  selectedTab === "calendar"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Calendar{" "}
+            </Link>
+          )}
           {loggedIn && <LogoutButton onClick={logoutHandler} />}
         </div>
       </div>
@@ -196,7 +225,7 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
-            to="/savedRecipes"
+            to="/SavedRecipes"
             onClick={() => setSelectedTab("saved-recipes")}
             style={{
               borderBottom:
@@ -215,6 +244,7 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
+<<<<<<< HEAD
             to="/Profile"
             onClick={() => setSelectedTab("profile")}
             style={{
@@ -224,12 +254,27 @@ function Navbar(props) {
                   : "none",
               color:
                 selectedTab === "profile"
+=======
+            to="/grocery-lists"
+            onClick={() => setSelectedTab("grocery-lists")}
+            style={{
+              borderBottom:
+                selectedTab === "grocery-lists"
+                  ? "3px solid rgb(0, 0, 0)"
+                  : "none",
+              color:
+                selectedTab === "grocery-lists"
+>>>>>>> origin/main
                   ? "rgb(0, 0, 0)"
                   : "rgb(92, 89, 89)",
             }}
           >
             {" "}
+<<<<<<< HEAD
             Profile{" "}
+=======
+            Grocery Lists{" "}
+>>>>>>> origin/main
           </Link>
         )}
         {loggedIn && (
@@ -247,19 +292,21 @@ function Navbar(props) {
             Pantry{" "}
           </Link>
         )}
-        <Link
-          to="/calendar"
-          onClick={() => setSelectedTab("calendar")}
-          style={{
-            borderBottom:
-              selectedTab === "calendar" ? "3px solid rgb(0, 0, 0)" : "none",
-            color:
-              selectedTab === "calendar" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
-          }}
-        >
-          {" "}
-          Calendar{" "}
-        </Link>
+        {loggedIn && (
+          <Link
+            to="/calendar"
+            onClick={() => setSelectedTab("calendar")}
+            style={{
+              borderBottom:
+                selectedTab === "calendar" ? "3px solid rgb(0, 0, 0)" : "none",
+              color:
+                selectedTab === "calendar" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Calendar{" "}
+          </Link>
+        )}
         {loggedIn && <LogoutButton onClick={logoutHandler} />}
         <button className="reOrder" onClick={toggleNavbar}>
           <ReorderIcon />

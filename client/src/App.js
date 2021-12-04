@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import { useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Calendar from "./components/Calendar/Calendar";
 import Home from "./components/Home/Home";
@@ -12,6 +13,9 @@ import Profile from "./components/Profile/Profile";
 import savedRecipes from "./components/SavedRecipes/savedRecipes";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Redirect } from "react-router";
+import SavedRecipes from "./components/SavedRecipes/SavedRecipes";
+import GroceryLists from "./components/GroceryLists/GroceryLists";
+
 // App component
 function App() {
   const location = useLocation();
@@ -27,7 +31,8 @@ function App() {
           <Route path="/sign-up" exact component={SignUp} />
           <Route path="/profile" exact component={Profile} />
           <Route path="/pantry" exact component={Pantry} />
-          <Route path="/savedRecipes" exact component={savedRecipes} />
+          <Route path="/savedRecipes" exact component={SavedRecipes} />
+          <Route path="/grocery-lists" exact component={GroceryLists} />
           <Route path="/calendar" exact component={Calendar} />
         </Switch>
       </Router>

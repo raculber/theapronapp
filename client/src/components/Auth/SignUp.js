@@ -22,39 +22,65 @@ import axios from "axios";
 const theme = createTheme();
 
 export default function SignUp() {
-  // const history = createBrowserHistory({ forceRefresh: true });
-  // const dispatch = useDispatch();
-  // const [token, setToken] = useState("");
-  // const [errorMessage, setErrorMessage] = useState("");
+  const history = createBrowserHistory({ forceRefresh: true }); //refresh page if signup succesfull
+  const dispatch = useDispatch(); //react redux, calls
+  const [token, setToken] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // useEffect(() => {
-  //   localStorage.setItem("token", token);
-  //   if (token !== "") {
-  //     axios
-  //       .get("http://localhost:3001/api/auth", {
-  //         headers: {
-  //           "access-token": localStorage.getItem("token"),
-  //         },
-  //       })
-  //       .then((res) => {
-  //         console.log(res);
-  //         history.replace("/");
-  //       })
-  //       //Use this code block if user not authenticated
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // }, [token, history]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  useEffect(() => { //when token state is changed this is called/ refresh
+    localStorage.setItem("token", token);
+    if (token !== "") {
+      axios
+        .get("http://localhost:3001/api/auth", {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          history.replace("/");
+        })
+        //Use this code block if user not authenticated
+        .catch((err) => {
+          console.log(err); //add error message
+        });
+    }
+  }, [token, history]);
+
+  const handleSubmit = (event) => { //to do sign in/sign up
+    event.preventDefault(); //stop from refreshing page
     const data = new FormData(event.currentTarget);
+     const userInfo = 
+     {  enteredEmail: data.get('email'),
+        enteredPassword: data.get('password'),
+        reenteredPassword: data.get('reenteredPassword')
+    };
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    console.log(userInfo);
+    axios
+    .post("http://localhost:3001/api/sign-up", userInfo)
+    .then((res) => {
+      // res.data.message will contain necessary info about why
+      // sign up/in failed
+      console.log(res);
+      if (res.data.message) {
+        // Handler server error in this code block
+        setErrorMessage(res.data.message);
+      } else if (res.data.token) {
+        dispatch(
+          addUser({
+            userId: res.data.result.userId,
+            email: res.data.result.enteredEmail,
+          })
+        );
+        setToken(res.data.token);
+      }
+    })
+    .catch((err) => console.log(err));
+
+
+
   };
 
   return (
@@ -128,10 +154,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  name="retypePassword"
+                  name="reenteredPassword"
                   label="Retype Password" //look at difference btw label, type...
-                  type="retypePassword"
-                  id="retypePassword"
+                  type="reenteredPassword"
+                  id="reenteredPassword"
                   autoComplete="new-password"
                 />
               </Grid>

@@ -69,6 +69,7 @@ const RecipeCard = (props) => {
         instructions: props.recipe.analyzedInstructions[0].steps,
         readyInMinutes: props.recipe.readyInMinutes,
         nutrients: props.recipe.nutrition.nutrients,
+        servings: props.recipe.servings,
         headers: {
           "access-token": localStorage.getItem("token"),
         },
