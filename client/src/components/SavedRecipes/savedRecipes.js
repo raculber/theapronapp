@@ -67,7 +67,7 @@ export default function SavedRecipes() {
       };
 
       const searchRecipes = (query) => {
-       
+        
       };
 
 
