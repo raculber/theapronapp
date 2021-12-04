@@ -36,6 +36,9 @@ class Profile extends Component {
     render(){
         return (
             <div className="profile">
+                <div className="label">
+                        My Favorite Recipes / Calendar (Missing)
+                </div>
                 <div className="userBox">
                     <div className="AvatarImage">
                         <Avatar size={140} src={this.state.profileImage}/>

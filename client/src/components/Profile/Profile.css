@@ -32,3 +32,9 @@
 .AvatarImage{
     margin-left: 50px;
 }
+
+.label{
+    margin-left: 600px;
+    font-size: large;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
