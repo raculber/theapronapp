@@ -1,14 +1,14 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Grid from "@mui/material/Grid";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RecipeCard from "../Recipe/RecipeCard";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
@@ -28,51 +28,46 @@ import Radio from "@mui/material/Radio";
 const theme = createTheme();
 
 export default function SavedRecipes() {
+  const [recipes, setRecipes] = useState([]);
+  const [totalRecipes, setTotalRecipes] = useState([]); //use totalRecipes array to search
+  const [pageCount, setPageCount] = useState(5);
+  const [page, setPage] = useState(1);
+  const userId = useSelector((state) => state.user.userId);
+  const [loading, setLoading] = useState(false);
 
-    const [recipes, setRecipes] = useState([]);
-    const [totalRecipes, setTotalRecipes] = useState([]); //use totalRecipes array to search
-    const [pageCount, setPageCount] = useState(5);
-    const [page, setPage] = useState(1);
-    const userId = useSelector((state) => state.user.userId);
-    const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (totalRecipes.length === 0) {
+      setLoading(true);
+      axios
+        .get("http://localhost:3001/api/get-saved-recipes?userId" + userId, {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        })
+        .then((res) => {
+          setTotalRecipes(res.data.recipes);
+          console.log(res.data.recipes);
+          setRecipes(res.data.recipes.slice(0, 20));
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    }
+  });
 
-    useEffect(() => {
-        if (totalRecipes.length === 0) {
-          setLoading(true);
-          axios
-            .get("http://localhost:3001/api/get-saved-recipes?userId" + userId, {
-                headers: {
-                    "access-token" : localStorage.getItem("token"),
-                },
-            })
-            .then((res) => {
-              setTotalRecipes(res.data.recipes);
-              console.log(res.data.recipes);
-              setRecipes(res.data.recipes.slice(0, 20));
-              setLoading(false);
-            })
-            .catch((err) => {
-              console.log(err);
-              setLoading(false);
-            });
-        }
-      });
+  const pageChangeHandler = (event, value) => {
+    setPage(value);
+    console.log(totalRecipes);
+    if (value < 6) {
+      setRecipes(totalRecipes.slice(20 * (value - 1), 20 * value));
+    }
+  };
 
-      const pageChangeHandler = (event, value) => {
-        setPage(value);
-        console.log(totalRecipes);
-        if (value < 6) {
-          setRecipes(totalRecipes.slice(20 * (value - 1), 20 * value));
-        }
-      };
-
-      const searchRecipes = (query) => {
-        
-      };
-
+  const searchRecipes = (query) => {};
 
   return (
-
     <div className="savedrecipes">
       <div className="search">
         <SearchBar
@@ -100,8 +95,7 @@ export default function SavedRecipes() {
             aria-controls="panel1a-content"
             id="panel1a-header"
             sx={{ padding: 0, marginLeft: 1 }}
-          >
-          </AccordionSummary>
+          ></AccordionSummary>
           <AccordionDetails sx={{ display: "flex", flexDirection: "row" }}>
             <FormGroup>
               <Typography>Exclusions</Typography>
@@ -153,5 +147,5 @@ export default function SavedRecipes() {
         />
       </Stack>
     </div>
-  )
+  );
 }

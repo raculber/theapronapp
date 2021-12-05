@@ -3,10 +3,24 @@ import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
 import Autocomplete from "@mui/material/Autocomplete";
+import AddIcon from "@mui/icons-material/Add";
 import Alert from "@mui/material/Alert";
+import ListItemText from "@mui/material/ListItemText";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import SendIcon from "@mui/icons-material/Send";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 import "./Pantry.css";
 import axios from "axios";
-import IngredientDisplay from "./IngredientDisplay";
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
+
 const Pantry = () => {
   const userId = useSelector((state) => state.user.userId);
   const [ingredientSearch, setIngredientSearch] = useState([]);
@@ -16,41 +30,10 @@ const Pantry = () => {
   });
   const [ingredients, setIngredients] = useState([]);
   const [error, setError] = useState("");
+  const forceUpdate = useForceUpdate();
 
   useEffect(() => {
-    if (ingredients.length === 0) {
-      axios
-        .get("http://localhost:3001/api/get-ingredients?userId=" + userId, {
-          headers: {
-            "access-token": localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          setIngredients(res.data.ingredients);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, []);
-
-  const removeIngredient = () => {
-    axios
-      .delete("http://localhost:3001/api/delete-ingredient", {
-        data: { userId: userId, ingredientId: 18064 },
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getIngredients = () => {
+    console.log("In use effect");
     axios
       .get("http://localhost:3001/api/get-ingredients?userId=" + userId, {
         headers: {
@@ -58,7 +41,31 @@ const Pantry = () => {
         },
       })
       .then((res) => {
+        setIngredients(res.data.ingredients);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  const removeIngredient = (name) => {
+    console.log("Remove");
+    console.log(name);
+    axios
+      .delete("http://localhost:3001/api/delete-ingredient", {
+        data: { userId: userId, name: name },
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
         console.log(res);
+        if (res.data.message == "Ingredient deleted") {
+          var filtered = ingredients.filter(function (value, index, arr) {
+            return value.name !== name;
+          });
+          setIngredients(filtered);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -66,6 +73,7 @@ const Pantry = () => {
   };
 
   const addIngredient = () => {
+    console.log(selectedIngredient);
     axios
       .post("http://localhost:3001/api/add-ingredient", {
         userId: userId,
@@ -79,6 +87,18 @@ const Pantry = () => {
         console.log(res);
         if (res.data.message) {
           setError(res.data.message);
+        } else {
+          console.log(res.data.data);
+          let addedIngredient = {
+            name: res.data.data.ingredientName,
+            image: res.data.data.image,
+          };
+          let newIngredients = ingredients;
+          newIngredients.push(addedIngredient);
+          console.log(newIngredients);
+          setIngredients(newIngredients);
+          forceUpdate();
+          // setIngredients(ingredients.push(addedIngredient));
         }
       })
       .catch((err) => {
@@ -87,18 +107,53 @@ const Pantry = () => {
   };
 
   const onItemSelected = (event, value) => {
-    console.log(value);
-
     setSelectedIngredient(value);
   };
 
   const onQueryChange = (event, value) => {
-    console.log(value);
-    setSelectedIngredient({ name: "", image: "" });
+    let ingredientInSearch = false;
+    if (event.type !== "blur") {
+      ingredientSearch.forEach((elem) => {
+        if (elem.name === value) {
+          setSelectedIngredient(elem);
+          ingredientInSearch = true;
+        }
+      });
+    }
+
+    if (!ingredientInSearch && event.type !== "blur")
+      setSelectedIngredient({ name: "", image: "" });
+    if (event.type !== "blur") {
+      axios
+        .get(
+          "http://localhost:3001/api/autocomplete-ingredient-search?query=" +
+            value,
+          {
+            headers: {
+              "access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setIngredientSearch(res.data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const getRecommendedRecipes = () => {
+    let commaSeperatedIngredients = ingredients
+      .map(function (elem) {
+        return elem.name;
+      })
+      .join(",");
     axios
       .get(
-        "http://localhost:3001/api/autocomplete-ingredient-search?query=" +
-          value,
+        "http://localhost:3001/api/get-recommended?ingredients=" +
+          commaSeperatedIngredients,
         {
           headers: {
             "access-token": localStorage.getItem("token"),
@@ -114,30 +169,88 @@ const Pantry = () => {
       });
   };
 
-  const closed = () => {
-    console.log("closed");
-  };
   return (
     <div className="pantry">
-      <Autocomplete
-        disablePortal
-        id="combo-box-demo"
-        options={ingredientSearch}
-        className="search-bar"
-        getOptionLabel={(option) => option.name}
-        onChange={onItemSelected}
-        onInputChange={onQueryChange}
-        renderInput={(params) => (
-          <TextField {...params} label="Search Ingredients" />
-        )}
-      />
-      {/* <SearchBar className="search-bar" onChange={onQueryChange} /> */}
-      <button onClick={addIngredient}>Add Ingredient</button>
-      <button onClick={getIngredients}>Get Ingredients</button>
-      <button onClick={removeIngredient}>Remove Ingredient</button>
-      {ingredients.map((ingredient) => (
-        <IngredientDisplay ingredient={ingredient} key={ingredient.name} />
-      ))}
+      <div className="add-ingredient">
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          freeSolo="true"
+          options={ingredientSearch}
+          className="search-bar"
+          getOptionLabel={(option) => option.name}
+          onChange={onItemSelected}
+          onInputChange={onQueryChange}
+          renderInput={(params) => (
+            <TextField {...params} label="Search Ingredients" />
+          )}
+        />
+        {/* <SearchBar className="search-bar" onChange={onQueryChange} /> */}
+        <Button
+          color="success"
+          sx={{
+            width: "60px",
+            height: "50px",
+            marginTop: "15px",
+            margin: "10px",
+            marginLeft: "5px",
+          }}
+          onClick={addIngredient}
+          variant="contained"
+          endIcon={<AddIcon />}
+        >
+          Add
+        </Button>
+      </div>
+      <Button
+        variant="contained"
+        onClick={getRecommendedRecipes}
+        sx={{
+          width: "300px",
+          padding: "10px",
+          marginLeft: "15px",
+          paddingRight: "20px",
+          "@media (max-width:650px)": {
+            margin: "auto",
+            marginBottom: "10px",
+          },
+        }}
+        endIcon={<SendIcon />}
+      >
+        Get Recommended Recipes
+      </Button>
+      <List
+        className="ingredient-list"
+        sx={{
+          margin: "10px",
+          "@media (max-width:650px)": {
+            margin: "auto",
+          },
+        }}
+      >
+        {ingredients.map((ingredient) => (
+          <ListItem
+            secondaryAction={
+              <IconButton edge="end" aria-label="delete">
+                <DeleteIcon onClick={() => removeIngredient(ingredient.name)} />
+              </IconButton>
+            }
+          >
+            <ListItemAvatar>
+              <Avatar
+                alt={ingredient.name + " picture"}
+                src={ingredient.image}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                ingredient.name.charAt(0).toUpperCase() +
+                ingredient.name.slice(1)
+              }
+            />
+          </ListItem>
+        ))}
+      </List>
       <Snackbar
         open={error !== ""}
         anchorOrigin={{ vertical: "center", horizontal: "bottom" }}
