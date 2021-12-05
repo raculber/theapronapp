@@ -78,7 +78,7 @@ export const getSavedRecipes = async (req, res) => {
   if (recipes.length > 0) {
     res.json({ recipes: recipes });
   } else {
-    res.json({ message: "No recipes saved" });
+    res.json({ recipes: [] });
   }
 };
 

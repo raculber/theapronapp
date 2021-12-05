@@ -1,0 +1,20 @@
+@media only screen and (min-width: 650px) {
+  .search-bar {
+    width: 40%;
+    margin: 10;
+  }
+  .pantry {
+    display: flex;
+    flex-direction: row;
+  }
+}
+@media only screen and (max-width: 650px) {
+  .search-bar {
+    width: 80%;
+    margin: auto;
+  }
+  .pantry {
+    display: flex;
+    flex-direction: column;
+  }
+}

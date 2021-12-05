@@ -8,6 +8,7 @@ import {
   addIngredient,
   getIngredients,
   deleteIngredient,
+  getAutoComplete,
 } from "../controllers/ingredients.js";
 import {
   saveRecipe,
@@ -38,6 +39,7 @@ router.post("/api/sign-in", signInUser);
 router.put("/api/update-user-picture", auth, updateUserPicture);
 router.get("/api/auth", auth, verifyToken);
 
+router.get("/api/autocomplete-ingredient-search", auth, getAutoComplete);
 router.get("/api/get-ingredients", auth, getIngredients);
 router.post("/api/add-ingredient", auth, addIngredient);
 router.delete("/api/delete-ingredient", auth, deleteIngredient);
