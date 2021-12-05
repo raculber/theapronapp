@@ -65,16 +65,16 @@ export default function SavedRecipes() {
           setRecipes(totalRecipes.slice(20 * (value - 1), 20 * value));
         }
       };
-
-      const searchRecipes = (query) => {
-        
-      };
+    
+    // const searchRecipes = (query) => {
+      
+    // };
 
 
   return (
 
     <div className="savedrecipes">
-      <div className="search">
+      {/* <div className="search">
         <SearchBar
           style={{
             width: "50%",
@@ -135,7 +135,7 @@ export default function SavedRecipes() {
             </FormGroup>
           </AccordionDetails>
         </Accordion>
-      </div>
+      </div> */}
       {loading && (
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       )}
