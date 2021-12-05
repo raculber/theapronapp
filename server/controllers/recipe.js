@@ -8,7 +8,7 @@ export const saveRecipe = async (req, res) => {
     userId,
     id,
     title,
-    extendedIngredients,
+    ingredients,
     vegetarian,
     vegan,
     glutenFree,
@@ -32,7 +32,7 @@ export const saveRecipe = async (req, res) => {
       userId: userId,
       id: id,
       title: title,
-      extendedIngredients: extendedIngredients,
+      ingredients: ingredients,
       vegetarian: vegetarian,
       vegan: vegan,
       glutenFree: glutenFree,
@@ -115,7 +115,6 @@ export const getRandomRecipes = async (req, res) => {
 export const getRecipeByName = async (req, res) => {
   let name = req.query.name;
   name = encodeURIComponent(name);
-  console.log(process.env.API_KEY);
   const options = {
     hostname: "api.spoonacular.com",
     path:

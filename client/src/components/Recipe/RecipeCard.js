@@ -57,7 +57,7 @@ const RecipeCard = (props) => {
         userId: userId,
         id: props.recipe.id,
         title: props.recipe.title,
-        ingredients: props.recipe.extendedIngredients,
+        ingredients: props.recipe.ingredients,
         vegan: props.recipe.vegan,
         vegetarian: props.recipe.vegetarian,
         glutenFree: props.recipe.glutenFree,
