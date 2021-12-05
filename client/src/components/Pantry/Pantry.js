@@ -14,8 +14,12 @@ import SendIcon from "@mui/icons-material/Send";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import recipe2 from "../Recipe/recipe2";
+import recipe from "../Recipe/recipe";
 import "./Pantry.css";
 import axios from "axios";
+import RecipeCard from "../Recipe/RecipeCard";
 function useForceUpdate() {
   const [value, setValue] = useState(0); // integer state
   return () => setValue((value) => value + 1); // update the state to force render
@@ -29,7 +33,9 @@ const Pantry = () => {
     image: "",
   });
   const [ingredients, setIngredients] = useState([]);
+  const [recipes, setRecipes] = useState([recipe2, recipe]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
@@ -47,7 +53,7 @@ const Pantry = () => {
         console.log(err);
       });
   }, []);
-
+  console.log(window.innerWidth);
   const removeIngredient = (name) => {
     console.log("Remove");
     console.log(name);
@@ -145,11 +151,13 @@ const Pantry = () => {
   };
 
   const getRecommendedRecipes = () => {
+    setLoading(true);
     let commaSeperatedIngredients = ingredients
       .map(function (elem) {
         return elem.name;
       })
       .join(",");
+    let recipes = [];
     axios
       .get(
         "http://localhost:3001/api/get-recommended?ingredients=" +
@@ -162,11 +170,34 @@ const Pantry = () => {
       )
       .then((res) => {
         console.log(res);
-        setIngredientSearch(res.data.results);
+        res.data.results.forEach((recipe) => {
+          axios
+            .get(
+              "http://localhost:3001/api/get-recipe-by-name?name=" +
+                recipe.title,
+              {
+                headers: {
+                  "access-token": localStorage.getItem("token"),
+                },
+              }
+            )
+            .then((res) => {
+              if (res.data.recipes) {
+                if (res.data.recipes.results.length > 0)
+                  recipes.push(res.data.recipes.results[0]);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
       })
       .catch((err) => {
         console.log(err);
       });
+    setLoading(false);
+    setRecipes(recipes);
+    forceUpdate();
   };
 
   return (
@@ -210,47 +241,66 @@ const Pantry = () => {
           padding: "10px",
           marginLeft: "15px",
           paddingRight: "20px",
+          backgroundColor: "#880085",
+          "&:hover": {
+            backgroundColor: "#6C4681",
+          },
           "@media (max-width:650px)": {
             margin: "auto",
             marginBottom: "10px",
           },
         }}
-        endIcon={<SendIcon />}
+        endIcon={!loading ? <SendIcon /> : <CircularProgress color="inherit" />}
       >
         Get Recommended Recipes
       </Button>
-      <List
-        className="ingredient-list"
-        sx={{
-          margin: "10px",
-          "@media (max-width:650px)": {
-            margin: "auto",
-          },
-        }}
-      >
-        {ingredients.map((ingredient) => (
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="delete">
-                <DeleteIcon onClick={() => removeIngredient(ingredient.name)} />
-              </IconButton>
-            }
-          >
-            <ListItemAvatar>
-              <Avatar
-                alt={ingredient.name + " picture"}
-                src={ingredient.image}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                ingredient.name.charAt(0).toUpperCase() +
-                ingredient.name.slice(1)
+      <div className="ingredients-and-recipes">
+        <List
+          className="ingredient-list"
+          sx={{
+            margin: "10px",
+            "@media (max-width:650px)": {
+              margin: "auto",
+            },
+          }}
+        >
+          {ingredients.map((ingredient) => (
+            <ListItem
+              secondaryAction={
+                <IconButton edge="end" aria-label="delete">
+                  <DeleteIcon
+                    onClick={() => removeIngredient(ingredient.name)}
+                  />
+                </IconButton>
               }
-            />
-          </ListItem>
-        ))}
-      </List>
+            >
+              <ListItemAvatar>
+                <Avatar
+                  alt={ingredient.name + " picture"}
+                  src={ingredient.image}
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  ingredient.name.charAt(0).toUpperCase() +
+                  ingredient.name.slice(1)
+                }
+              />
+            </ListItem>
+          ))}
+          {ingredients.length == 0 && (
+            <ListItem>
+              <ListItemText primary="No ingredients added" />
+            </ListItem>
+          )}
+        </List>
+
+        <div className="recipes">
+          {recipes.map((recipe) => (
+            <RecipeCard recipe={recipe} />
+          ))}
+        </div>
+      </div>
       <Snackbar
         open={error !== ""}
         anchorOrigin={{ vertical: "center", horizontal: "bottom" }}

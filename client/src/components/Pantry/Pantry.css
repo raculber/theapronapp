@@ -1,9 +1,19 @@
 @media only screen and (min-width: 650px) {
   .search-bar {
-    width: 30%;
+    width: 40%;
     margin: 10px;
     margin-left: 15px;
   }
+  .ingredients-and-recipes {
+    display: flex;
+    flex-direction: row;
+  }
+  .recipes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .pantry {
     display: flex;
     flex-direction: column;
@@ -11,7 +21,7 @@
   .ingredient-list {
     max-height: 80%;
     overflow: auto;
-    width: 35%;
+    width: 40%;
     margin: 10px;
     border-style: groove;
     background-color: "#F5F5F5";
@@ -34,6 +44,10 @@
     border-style: groove;
     background-color: "#F5F5F5";
   }
+  .ingredients-and-recipes {
+    display: flex;
+    flex-direction: column;
+  }
 }
 .ingredients {
   display: flex;
@@ -42,4 +56,14 @@
 .add-ingredient {
   display: flex;
   flex-direction: row;
+}
+.recipes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.ingredients-and-recipes {
+  display: flex;
+  flex-direction: column;
 }

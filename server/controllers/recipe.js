@@ -112,6 +112,39 @@ export const getRandomRecipes = async (req, res) => {
   request.end();
 };
 
+export const getRecipeByName = async (req, res) => {
+  let name = req.query.name;
+  name = encodeURIComponent(name);
+  console.log(process.env.API_KEY);
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/recipes/complexSearch?apiKey=" +
+      process.env.API_KEY +
+      "&addRecipeNutrition=true&number=1&addRecipeInformation=true" +
+      "&instructionsRequired=true" +
+      "&titleMatch=" +
+      name,
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ recipes: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401);
+  });
+
+  request.end();
+};
+
 export const getRecipesByQuery = async (req, res) => {
   let number = req.query.number;
   let query = req.query.search;

@@ -17,6 +17,7 @@ import {
   getSavedRecipes,
   getRandomRecipes,
   getRecipesByQuery,
+  getRecipeByName,
 } from "../controllers/recipe.js";
 import {
   addRecipeToDate,
@@ -51,6 +52,7 @@ router.get("/api/get-recipe-saved", getRecipeSaved);
 router.get("/api/get-saved-recipes", auth, getSavedRecipes);
 router.get("/api/get-random-recipes", getRandomRecipes);
 router.get("/api/get-recipes-by-query", getRecipesByQuery);
+router.get("/api/get-recipe-by-name", getRecipeByName);
 
 router.post("/api/add-recipe-to-date", auth, addRecipeToDate);
 router.delete("/api/delete-recipe-from-date", auth, deleteRecipeFromDate);
