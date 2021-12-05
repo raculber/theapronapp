@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RecipeCard from "../Recipe/RecipeCard";
+import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import CircularProgress from "@mui/material/CircularProgress";
