@@ -24,6 +24,8 @@ import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Radio from "@mui/material/Radio";
+import CustomRecipeCard from "../Recipe/CustomRecipeCard";
+import CustomIngredientsTable from "../Recipe/CustomIngredientsTable";
 
 const theme = createTheme();
 
@@ -39,7 +41,7 @@ export default function SavedRecipes() {
     if (totalRecipes.length === 0) {
       setLoading(true);
       axios
-        .get("http://localhost:3001/api/get-saved-recipes?userId" + userId, {
+        .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -65,7 +67,7 @@ export default function SavedRecipes() {
     }
   };
 
-  const searchRecipes = (query) => {};
+  //const searchRecipes = (query) => {};
 
   return (
     <div className="savedrecipes">
@@ -136,7 +138,7 @@ export default function SavedRecipes() {
 
       <div className="recipes">
         {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe} key={recipe.id} />
+          <CustomRecipeCard recipe={recipe} key={recipe.id} />
         ))}
       </div>
       <Stack spacing={2} sx={{ margin: "auto" }}>
