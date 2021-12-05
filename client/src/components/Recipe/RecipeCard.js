@@ -50,14 +50,23 @@ const RecipeCard = (props) => {
   const alertClosedHandler = () => {
     setAlertMessage("");
   };
-  console.log(props.recipe.cheap);
   const recipeSaveHandler = () => {
+    console.log(props.recipe);
+    let ingredients = [];
+    props.recipe.nutrition.ingredients.forEach((ingredient) => {
+      ingredients.push({
+        id: ingredient.id,
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+      });
+    });
     axios
       .post("http://localhost:3001/api/save-recipe", {
         userId: userId,
         id: props.recipe.id,
         title: props.recipe.title,
-        ingredients: props.recipe.ingredients,
+        ingredients: ingredients,
         vegan: props.recipe.vegan,
         vegetarian: props.recipe.vegetarian,
         glutenFree: props.recipe.glutenFree,

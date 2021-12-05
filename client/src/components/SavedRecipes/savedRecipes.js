@@ -143,6 +143,7 @@ export default function SavedRecipes() {
       </div>
       <Stack spacing={2} sx={{ margin: "auto" }}>
         <Pagination
+          sx={{ margin: "auto" }}
           count={pageCount}
           page={page}
           onChange={pageChangeHandler}

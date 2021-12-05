@@ -22,7 +22,6 @@ const CustomRecipeCard = (props) => {
   const [alertMessage, setAlertMessage] = useState("");
   const [iconColor, setIconColor] = useState("#A9A9A9");
   const userId = useSelector((state) => state.user.userId);
-
   const getRecipeSaved = useCallback(() => {
     axios
       .get(
@@ -50,7 +49,7 @@ const CustomRecipeCard = (props) => {
   const alertClosedHandler = () => {
     setAlertMessage("");
   };
-  console.log(props.recipe.cheap);
+  console.log(props.recipe.nutrients[0]);
   const recipeSaveHandler = () => {
     axios
       .post("http://localhost:3001/api/save-recipe", {
@@ -128,11 +127,11 @@ const CustomRecipeCard = (props) => {
           }
           title={props.recipe.title ? props.recipe.title : "No title"}
           subheader={
-            props.recipe.servings && props.recipe.nutrients.amount
+            props.recipe.servings
               ? "Servings: " +
                 props.recipe.servings +
                 " Calories: " +
-                Math.round(props.recipe.nutrition.nutrients.amount) +
+                Math.round(props.recipe.nutrients[0].amount) +
                 " Ready In: " +
                 props.recipe.readyInMinutes +
                 " minutes"

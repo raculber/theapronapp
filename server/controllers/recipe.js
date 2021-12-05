@@ -22,6 +22,7 @@ export const saveRecipe = async (req, res) => {
     readyInMinutes,
     servings,
   } = req.body;
+  console.log(ingredients);
   const recipeExists = await Recipe.exists({
     userId: userId,
     id: id,
@@ -46,6 +47,7 @@ export const saveRecipe = async (req, res) => {
       readyInMinutes: readyInMinutes,
       servings: servings,
     });
+
     recipe.save();
     res.json({ message: "Added to favorites" });
   }
