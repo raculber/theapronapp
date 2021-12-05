@@ -19,7 +19,6 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
-
 export default function SignIn() {
   const history = createBrowserHistory({ forceRefresh: true });
   const dispatch = useDispatch();
@@ -78,7 +77,6 @@ export default function SignIn() {
       })
       .catch((err) => console.log(err));
   };
-
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

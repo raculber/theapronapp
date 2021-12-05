@@ -1,15 +1,21 @@
 import React from "react";
 import "./App.css";
 import { useLocation } from "react-router-dom";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-
 import Calendar from "./components/Calendar/Calendar";
 import Home from "./components/Home/Home";
 import Navbar from "./components/UI/Navbar";
 import SignIn from "./components/Auth/SignIn";
 import SignUp from "./components/Auth/SignUp";
 import Pantry from "./components/Pantry/Pantry";
+<<<<<<< HEAD
 import SavedRecipes from "./components/SavedRecipes/savedRecipes";
+=======
+import Profile from "./components/Profile/Profile";
+import savedRecipes from "./components/SavedRecipes/SavedRecipes";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Redirect } from "react-router";
+import SavedRecipes from "./components/SavedRecipes/SavedRecipes";
+>>>>>>> 836ba55896bd1c390dc10938c5c3b6560977644c
 import GroceryLists from "./components/GroceryLists/GroceryLists";
 
 // App component
@@ -25,6 +31,7 @@ function App() {
           <Route path="/" exact component={Home} />
           <Route path="/sign-in" exact component={SignIn} />
           <Route path="/sign-up" exact component={SignUp} />
+          <Route path="/profile" exact component={Profile} />
           <Route path="/pantry" exact component={Pantry} />
           <Route path="/savedRecipes" exact component={SavedRecipes} />
           <Route path="/grocery-lists" exact component={GroceryLists} />
