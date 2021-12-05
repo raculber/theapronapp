@@ -118,7 +118,7 @@ function Navbar(props) {
               }}
             >
               {" "}
-              Saved Recipes{" "}
+              Favorites{" "}
             </Link>
           )}
           {loggedIn && (
@@ -236,7 +236,7 @@ function Navbar(props) {
             }}
           >
             {" "}
-            Saved Recipes{" "}
+            Favorites{" "}
           </Link>
         )}
         {loggedIn && (

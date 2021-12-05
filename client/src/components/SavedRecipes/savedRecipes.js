@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RecipeCard from "../Recipe/RecipeCard";
+import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -39,7 +40,7 @@ export default function SavedRecipes() {
     if (totalRecipes.length === 0) {
       setLoading(true);
       axios
-        .get("http://localhost:3001/api/get-saved-recipes?userId" + userId, {
+        .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -136,7 +137,7 @@ export default function SavedRecipes() {
 
       <div className="recipes">
         {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe} key={recipe.id} />
+          <CustomRecipeCard recipe={recipe} key={recipe.id} />
         ))}
       </div>
       <Stack spacing={2} sx={{ margin: "auto" }}>
