@@ -25,7 +25,6 @@ import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Radio from "@mui/material/Radio";
-import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import CustomIngredientsTable from "../Recipe/CustomIngredientsTable";
 
 const theme = createTheme();
