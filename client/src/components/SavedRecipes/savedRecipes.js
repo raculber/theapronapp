@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import RecipeCard from "../Recipe/RecipeCard";
+import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -24,6 +25,7 @@ import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Radio from "@mui/material/Radio";
+import CustomIngredientsTable from "../Recipe/CustomIngredientsTable";
 
 const theme = createTheme();
 
@@ -39,7 +41,7 @@ export default function SavedRecipes() {
     if (totalRecipes.length === 0) {
       setLoading(true);
       axios
-        .get("http://localhost:3001/api/get-saved-recipes?userId" + userId, {
+        .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -65,11 +67,11 @@ export default function SavedRecipes() {
     }
   };
 
-  const searchRecipes = (query) => {};
+  //const searchRecipes = (query) => {};
 
   return (
     <div className="savedrecipes">
-      <div className="search">
+      {/* <div className="search">
         <SearchBar
           style={{
             width: "50%",
@@ -129,14 +131,14 @@ export default function SavedRecipes() {
             </FormGroup>
           </AccordionDetails>
         </Accordion>
-      </div>
+      </div> */}
       {loading && (
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       )}
 
       <div className="recipes">
         {recipes.map((recipe) => (
-          <RecipeCard recipe={recipe} key={recipe.id} />
+          <CustomRecipeCard recipe={recipe} key={recipe.id} />
         ))}
       </div>
       <Stack spacing={2} sx={{ margin: "auto" }}>
