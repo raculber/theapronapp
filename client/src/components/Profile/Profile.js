@@ -11,7 +11,7 @@ class Profile extends Component {
         super(props);
         this.state={
             //Default image
-            profileImage: 'https://th.bing.com/th/id/R.8f185ac6c4a78763aa31acf73ee3e46b?rik=X7w93PUB4j3AXg&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_568656.png&ehk=YMUL5OvijifwVr2xWFpqoEf4STb07PZwQdnl0ispWMc%3d&risl=&pid=ImgRaw&r=0'
+            profileImage: this.props.image
         }
     }
 
@@ -41,7 +41,7 @@ class Profile extends Component {
                 </div>
                 <div className="userBox">
                     <div className="AvatarImage">
-                        <Avatar size={140} src={this.state.profileImage}/>
+                        <Avatar size={140} src={this.getUserImage()}/>
                     </div>
                     <ImageModal handlerImageChange={this.handlerImageChange} pic1={this.imgArray[0]}
                     pic2={this.imgArray[1]} pic3={this.imgArray[2]}/>
@@ -50,15 +50,21 @@ class Profile extends Component {
                     </div>
                 </div>
             </div>
-    
         );
     }
 }
 
 function mapStateToProps(state){
     return{
-        email: state.user.email
+        email: state.user.email,
+        image: state.user.image
     };
 }
 
-export default connect(mapStateToProps)(Profile);
+function mapDispatchToProps(dispatch){
+    return{
+        image: dispatch.user.image
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Profile);
