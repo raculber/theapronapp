@@ -31,14 +31,15 @@ const theme = createTheme();
 
 export default function SavedRecipes() {
   const [recipes, setRecipes] = useState([]);
-  const [totalRecipes, setTotalRecipes] = useState([]); //use totalRecipes array to search
+  const [totalRecipes, setTotalRecipes] = useState(null); //use totalRecipes array to search
   const [pageCount, setPageCount] = useState(5);
   const [page, setPage] = useState(1);
   const userId = useSelector((state) => state.user.userId);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (totalRecipes.length === 0) {
+    console.log(totalRecipes);
+    if (totalRecipes == null) {
       setLoading(true);
       axios
         .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
@@ -47,17 +48,23 @@ export default function SavedRecipes() {
           },
         })
         .then((res) => {
-          setTotalRecipes(res.data.recipes);
-          console.log(res.data.recipes);
-          setRecipes(res.data.recipes.slice(0, 20));
-          setLoading(false);
+          if (res.data.recipes.length == 0) setTotalRecipes([]);
+          else {
+            setTotalRecipes(res.data.recipes);
+            console.log(res.data.recipes);
+            setRecipes(res.data.recipes.slice(0, 20));
+            setLoading(false);
+          }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
+          setTotalRecipes([]);
+
+          console.log(totalRecipes);
           setLoading(false);
         });
     }
-  });
+  }, []);
 
   const pageChangeHandler = (event, value) => {
     setPage(value);

@@ -87,7 +87,7 @@ export const aggregateList = async (req, res) => {
   const ingredientMap = new Map();
 
   recipes.forEach((recipe) => {
-    recipe.forEach((ingredient) => {
+    recipe.ingredients.forEach((ingredient) => {
       if (!ingredientMap.get(ingredient.name)) {
         ingredientMap.set(ingredient.name, ingredient.amount);
       }
