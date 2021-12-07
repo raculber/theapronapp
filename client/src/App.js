@@ -16,7 +16,6 @@ import GroceryLists from "./components/GroceryLists/GroceryLists";
 // App component
 function App() {
   const location = useLocation();
-  console.log(location.pathname);
 
   return (
     <div className="App">

@@ -8,8 +8,10 @@ const ingredientsSchema = new Schema({
   },
   ingredients: [
     {
-      id: Number,
-      name: String,
+      name: {
+        type: String,
+        required: true,
+      },
       image: String,
     },
   ],

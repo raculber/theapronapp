@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createBrowserHistory } from "history";
 import RecipeCard from "../Recipe/RecipeCard";
 import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { useEffect, useState } from "react";
@@ -23,22 +24,29 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Radio from "@mui/material/Radio";
+import Button from "@mui/material/Button";
 import CustomIngredientsTable from "../Recipe/CustomIngredientsTable";
+import "./SavedRecipes.css";
+import { clearList } from "../../store/grocery-list";
 
 const theme = createTheme();
 
 export default function SavedRecipes() {
   const [recipes, setRecipes] = useState([]);
-  const [totalRecipes, setTotalRecipes] = useState(null); //use totalRecipes array to search
+  const [totalRecipes, setTotalRecipes] = useState(null);
   const [pageCount, setPageCount] = useState(5);
   const [page, setPage] = useState(1);
   const userId = useSelector((state) => state.user.userId);
+  const groceryList = useSelector((state) => state.groceryList.recipes);
+  const groceryListCount = useSelector((state) => state.groceryList.count);
+  const dispatch = useDispatch();
+  const history = createBrowserHistory({ forceRefresh: true });
+  console.log(userId);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log(totalRecipes);
     if (totalRecipes == null) {
       setLoading(true);
       axios
@@ -48,8 +56,10 @@ export default function SavedRecipes() {
           },
         })
         .then((res) => {
-          if (res.data.recipes.length == 0) setTotalRecipes([]);
-          else {
+          if (res.data.recipes.length == 0) {
+            setLoading(false);
+            setTotalRecipes([]);
+          } else {
             setTotalRecipes(res.data.recipes);
             console.log(res.data.recipes);
             setRecipes(res.data.recipes.slice(0, 20));
@@ -74,10 +84,48 @@ export default function SavedRecipes() {
     }
   };
 
+  const createGroceryList = () => {
+    axios
+      .post("http://localhost:3001/api/aggregate-grocery-lists", {
+        userId: userId,
+        recipes: groceryList,
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.list) {
+          dispatch(clearList());
+          history.replace("/grocery-lists");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   //const searchRecipes = (query) => {};
 
   return (
-    <div className="savedrecipes">
+    <div className="saved-recipes">
+      <Button
+        variant="contained"
+        size="large"
+        color="secondary"
+        onClick={createGroceryList}
+        sx={{
+          margin: "auto",
+          width: "50%",
+          ["@media (min-width:650px)"]: {
+            margin: "15px",
+            width: "350px",
+          },
+        }}
+      >
+        Create Grocery List [{groceryListCount}]
+      </Button>
+      {loading && (
+        <CircularProgress sx={{ margin: "auto" }} color="secondary" />
+      )}
       {/* <div className="search">
         <SearchBar
           style={{
@@ -139,9 +187,6 @@ export default function SavedRecipes() {
           </AccordionDetails>
         </Accordion>
       </div> */}
-      {loading && (
-        <CircularProgress sx={{ margin: "auto" }} color="secondary" />
-      )}
 
       <div className="recipes">
         {recipes.map((recipe) => (

@@ -9,7 +9,7 @@ const groceryListSchema = new Schema({
   },
   groceryLists: [
     {
-      name: { type: String, unique: true },
+      name: String,
       items: [
         {
           id: Number,

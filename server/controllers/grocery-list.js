@@ -46,7 +46,7 @@ export const getLists = async (req, res) => {
   const userLists = await GroceryList.findOne({
     userId: userId,
   });
-  if (!userLists) res.json({ message: "No lists found" });
+  if (!userLists) res.json({ lists: [] });
   else res.json({ lists: userLists.groceryLists });
 };
 
@@ -83,6 +83,7 @@ export const updateList = async (req, res) => {
 
 export const aggregateList = async (req, res) => {
   let { userId, recipes } = req.body;
+  console.log(userId);
   let grocerylist = [];
   const ingredientMap = new Map();
 
@@ -99,7 +100,7 @@ export const aggregateList = async (req, res) => {
     let key = ingredient[0];
     let value = ingredient[1];
     let capitalizedName = key.charAt(0).toUpperCase() + key.slice(1);
-    grocerylist.push({ id: id, name: capitalizedName, amount: 0, unit: "" });
+    grocerylist.push({ name: capitalizedName, amount: 0, unit: "" });
     index++;
   }
   let listName = "Grocery List 1";

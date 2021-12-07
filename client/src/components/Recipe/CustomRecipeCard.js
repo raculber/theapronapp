@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
@@ -25,7 +26,7 @@ const CustomRecipeCard = (props) => {
   const [alertMessage, setAlertMessage] = useState("");
   const recipes = useSelector((state) => state.groceryList.recipes);
   const [iconColor, setIconColor] = useState("#A9A9A9");
-  const [listColor, setListColor] = useState("#FFFFFF");
+  const [shoppingCartColor, setShoppingCartColor] = useState("#000000");
 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.userId);
@@ -49,10 +50,18 @@ const CustomRecipeCard = (props) => {
         console.log(err);
       });
   }, [props.recipe.id, userId]);
-
+  const getRecipeInCart = useCallback(() => {
+    let recipeWithId = recipes.filter((recipe) => {
+      return recipe.id == props.recipe.id;
+    });
+    if (recipeWithId.length > 0) {
+      setShoppingCartColor("#0000FF");
+    }
+  }, []);
   useEffect(() => {
     getRecipeSaved();
-  }, [getRecipeSaved]);
+    getRecipeInCart();
+  }, [getRecipeSaved, getRecipeInCart]);
 
   const alertClosedHandler = () => {
     setAlertMessage("");
@@ -110,6 +119,7 @@ const CustomRecipeCard = (props) => {
         })
       );
       setAlertMessage("Removed from list");
+      setShoppingCartColor("#000000");
     } else {
       dispatch(
         addRecipe({
@@ -117,6 +127,7 @@ const CustomRecipeCard = (props) => {
           ingredients: props.recipe.ingredients,
         })
       );
+      setShoppingCartColor("#0000FF");
       setAlertMessage("Added to list");
     }
   };
@@ -136,7 +147,7 @@ const CustomRecipeCard = (props) => {
           position: "relative",
           margin: 2,
           ["@media (max-width:730px)"]: {
-            maxWidth: 250,
+            maxWidth: 300,
             margin: 1,
           },
         }}
@@ -148,9 +159,11 @@ const CustomRecipeCard = (props) => {
                 aria-label="Add to grocery list"
                 onClick={addToGroceryList}
               >
-                <ListAltIcon
+                <AddShoppingCartIcon
                   sx={{
                     cursor: "pointer",
+                    zIndex: 100,
+                    color: shoppingCartColor,
                   }}
                 />
               </IconButton>
@@ -160,6 +173,7 @@ const CustomRecipeCard = (props) => {
                     cursor: "pointer",
                     top: 0,
                     right: 0,
+                    zIndex: 100,
                     color: iconColor,
                   }}
                 />

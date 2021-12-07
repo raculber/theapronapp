@@ -106,7 +106,7 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
@@ -126,7 +126,7 @@ export default function SignUp() {
                   name="lastName"
                   autoComplete="family-name"
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -154,7 +154,7 @@ export default function SignUp() {
                   fullWidth
                   name="reenteredPassword"
                   label="Retype Password" //look at difference btw label, type...
-                  type="reenteredPassword"
+                  type="password"
                   id="reenteredPassword"
                   autoComplete="new-password"
                 />

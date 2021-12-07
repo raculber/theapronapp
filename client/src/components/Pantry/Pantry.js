@@ -33,7 +33,7 @@ const Pantry = () => {
     image: "",
   });
   const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState([recipe2, recipe]);
+  const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const forceUpdate = useForceUpdate();
@@ -157,7 +157,6 @@ const Pantry = () => {
         return elem.name;
       })
       .join(",");
-    let recipes = [];
     axios
       .get(
         "http://localhost:3001/api/get-recommended?ingredients=" +
@@ -170,6 +169,7 @@ const Pantry = () => {
       )
       .then((res) => {
         console.log(res);
+        let recipes = [];
         res.data.results.forEach((recipe) => {
           axios
             .get(
@@ -191,13 +191,13 @@ const Pantry = () => {
               console.log(err);
             });
         });
+        console.log(recipes);
+        setRecipes(recipes);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
-    setLoading(false);
-    setRecipes(recipes);
-    forceUpdate();
   };
 
   return (

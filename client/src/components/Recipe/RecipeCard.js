@@ -131,6 +131,7 @@ const RecipeCard = (props) => {
                   top: 0,
                   right: 0,
                   color: iconColor,
+                  zIndex: 100,
                 }}
               />
             </IconButton>
