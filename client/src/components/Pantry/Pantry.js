@@ -1,27 +1,45 @@
 import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
+import Snackbar from "@mui/material/Snackbar";
+import Autocomplete from "@mui/material/Autocomplete";
+import AddIcon from "@mui/icons-material/Add";
+import Alert from "@mui/material/Alert";
+import ListItemText from "@mui/material/ListItemText";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import SendIcon from "@mui/icons-material/Send";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import CircularProgress from "@mui/material/CircularProgress";
+import recipe2 from "../Recipe/recipe2";
+import recipe from "../Recipe/recipe";
+import "./Pantry.css";
 import axios from "axios";
+import RecipeCard from "../Recipe/RecipeCard";
+function useForceUpdate() {
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue((value) => value + 1); // update the state to force render
+}
 
 const Pantry = () => {
   const userId = useSelector((state) => state.user.userId);
-  console.log(userId);
+  const [ingredientSearch, setIngredientSearch] = useState([]);
+  const [selectedIngredient, setSelectedIngredient] = useState({
+    name: "",
+    image: "",
+  });
+  const [ingredients, setIngredients] = useState([]);
+  const [recipes, setRecipes] = useState([recipe2, recipe]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const forceUpdate = useForceUpdate();
 
-  const removeIngredient = () => {
-    axios
-      .delete("http://localhost:3001/api/delete-ingredient", {
-        data: { userId: userId, ingredientId: 18064 },
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const getIngredients = () => {
+  useEffect(() => {
+    console.log("In use effect");
     axios
       .get("http://localhost:3001/api/get-ingredients?userId=" + userId, {
         headers: {
@@ -29,7 +47,31 @@ const Pantry = () => {
         },
       })
       .then((res) => {
+        setIngredients(res.data.ingredients);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+  console.log(window.innerWidth);
+  const removeIngredient = (name) => {
+    console.log("Remove");
+    console.log(name);
+    axios
+      .delete("http://localhost:3001/api/delete-ingredient", {
+        data: { userId: userId, name: name },
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((res) => {
         console.log(res);
+        if (res.data.message == "Ingredient deleted") {
+          var filtered = ingredients.filter(function (value, index, arr) {
+            return value.name !== name;
+          });
+          setIngredients(filtered);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -37,29 +79,236 @@ const Pantry = () => {
   };
 
   const addIngredient = () => {
-    //Send ingredient to database
-    //Replace ingredientId with correct id
+    console.log(selectedIngredient);
     axios
       .post("http://localhost:3001/api/add-ingredient", {
         userId: userId,
-        ingredientId: 18064,
-        ingredientName: "bread",
+        ingredientName: selectedIngredient.name,
+        image: selectedIngredient.image,
         headers: {
           "access-token": localStorage.getItem("token"),
         },
       })
       .then((res) => {
         console.log(res);
+        if (res.data.message) {
+          setError(res.data.message);
+        } else {
+          console.log(res.data.data);
+          let addedIngredient = {
+            name: res.data.data.ingredientName,
+            image: res.data.data.image,
+          };
+          let newIngredients = ingredients;
+          newIngredients.push(addedIngredient);
+          console.log(newIngredients);
+          setIngredients(newIngredients);
+          forceUpdate();
+          // setIngredients(ingredients.push(addedIngredient));
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const onItemSelected = (event, value) => {
+    setSelectedIngredient(value);
+  };
+
+  const onQueryChange = (event, value) => {
+    let ingredientInSearch = false;
+    if (event.type !== "blur") {
+      ingredientSearch.forEach((elem) => {
+        if (elem.name === value) {
+          setSelectedIngredient(elem);
+          ingredientInSearch = true;
+        }
+      });
+    }
+
+    if (!ingredientInSearch && event.type !== "blur")
+      setSelectedIngredient({ name: "", image: "" });
+    if (event.type !== "blur") {
+      axios
+        .get(
+          "http://localhost:3001/api/autocomplete-ingredient-search?query=" +
+            value,
+          {
+            headers: {
+              "access-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setIngredientSearch(res.data.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const getRecommendedRecipes = () => {
+    setLoading(true);
+    let commaSeperatedIngredients = ingredients
+      .map(function (elem) {
+        return elem.name;
+      })
+      .join(",");
+    let recipes = [];
+    axios
+      .get(
+        "http://localhost:3001/api/get-recommended?ingredients=" +
+          commaSeperatedIngredients,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        res.data.results.forEach((recipe) => {
+          axios
+            .get(
+              "http://localhost:3001/api/get-recipe-by-name?name=" +
+                recipe.title,
+              {
+                headers: {
+                  "access-token": localStorage.getItem("token"),
+                },
+              }
+            )
+            .then((res) => {
+              if (res.data.recipes) {
+                if (res.data.recipes.results.length > 0)
+                  recipes.push(res.data.recipes.results[0]);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setLoading(false);
+    setRecipes(recipes);
+    forceUpdate();
+  };
+
   return (
-    <div>
-      <button onClick={addIngredient}>Add Ingredient</button>
-      <button onClick={getIngredients}>Get Ingredients</button>
-      <button onClick={removeIngredient}>Remove Ingredient</button>
+    <div className="pantry">
+      <div className="add-ingredient">
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          freeSolo="true"
+          options={ingredientSearch}
+          className="search-bar"
+          getOptionLabel={(option) => option.name}
+          onChange={onItemSelected}
+          onInputChange={onQueryChange}
+          renderInput={(params) => (
+            <TextField {...params} label="Search Ingredients" />
+          )}
+        />
+        {/* <SearchBar className="search-bar" onChange={onQueryChange} /> */}
+        <Button
+          color="success"
+          sx={{
+            width: "60px",
+            height: "50px",
+            marginTop: "15px",
+            margin: "10px",
+            marginLeft: "5px",
+          }}
+          onClick={addIngredient}
+          variant="contained"
+          endIcon={<AddIcon />}
+        >
+          Add
+        </Button>
+      </div>
+      <Button
+        variant="contained"
+        onClick={getRecommendedRecipes}
+        sx={{
+          width: "300px",
+          padding: "10px",
+          marginLeft: "15px",
+          paddingRight: "20px",
+          backgroundColor: "#880085",
+          "&:hover": {
+            backgroundColor: "#6C4681",
+          },
+          "@media (max-width:650px)": {
+            margin: "auto",
+            marginBottom: "10px",
+          },
+        }}
+        endIcon={!loading ? <SendIcon /> : <CircularProgress color="inherit" />}
+      >
+        Get Recommended Recipes
+      </Button>
+      <div className="ingredients-and-recipes">
+        <List
+          className="ingredient-list"
+          sx={{
+            margin: "10px",
+            "@media (max-width:650px)": {
+              margin: "auto",
+            },
+          }}
+        >
+          {ingredients.map((ingredient) => (
+            <ListItem
+              secondaryAction={
+                <IconButton edge="end" aria-label="delete">
+                  <DeleteIcon
+                    onClick={() => removeIngredient(ingredient.name)}
+                  />
+                </IconButton>
+              }
+            >
+              <ListItemAvatar>
+                <Avatar
+                  alt={ingredient.name + " picture"}
+                  src={ingredient.image}
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  ingredient.name.charAt(0).toUpperCase() +
+                  ingredient.name.slice(1)
+                }
+              />
+            </ListItem>
+          ))}
+          {ingredients.length == 0 && (
+            <ListItem>
+              <ListItemText primary="No ingredients added" />
+            </ListItem>
+          )}
+        </List>
+
+        <div className="recipes">
+          {recipes.map((recipe) => (
+            <RecipeCard recipe={recipe} />
+          ))}
+        </div>
+      </div>
+      <Snackbar
+        open={error !== ""}
+        anchorOrigin={{ vertical: "center", horizontal: "bottom" }}
+        autoHideDuration={4000}
+        onClose={() => setError("")}
+      >
+        <Alert severity="error">{error}</Alert>
+      </Snackbar>
     </div>
   );
 };

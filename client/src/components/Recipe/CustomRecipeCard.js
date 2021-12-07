@@ -1,5 +1,5 @@
 import { useState, Fragment, useCallback, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import CustomRecipeModal from "./CustomRecipeModal";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -9,20 +9,26 @@ import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
 import dollarIcon from "../../images/dollar_icon.png";
+import CardActions from "@mui/material/CardActions";
 import vegetarianIcon from "../../images/vegetarian_icon.jpg";
 import dairyFree from "../../images/dairy_free.png";
 // import recipe from "./recipe";
 import axios from "axios";
+import { addRecipe, removeRecipe } from "../../store/grocery-list";
 
 const CustomRecipeCard = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const recipes = useSelector((state) => state.groceryList.recipes);
   const [iconColor, setIconColor] = useState("#A9A9A9");
-  const userId = useSelector((state) => state.user.userId);
+  const [listColor, setListColor] = useState("#FFFFFF");
 
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.userId);
   const getRecipeSaved = useCallback(() => {
     axios
       .get(
@@ -43,6 +49,7 @@ const CustomRecipeCard = (props) => {
         console.log(err);
       });
   }, [props.recipe.id, userId]);
+
   useEffect(() => {
     getRecipeSaved();
   }, [getRecipeSaved]);
@@ -50,7 +57,6 @@ const CustomRecipeCard = (props) => {
   const alertClosedHandler = () => {
     setAlertMessage("");
   };
-  console.log(props.recipe.cheap);
   const recipeSaveHandler = () => {
     axios
       .post("http://localhost:3001/api/save-recipe", {
@@ -93,6 +99,28 @@ const CustomRecipeCard = (props) => {
     if (event.target.tagName !== "path") setShowModal(true);
   };
 
+  const addToGroceryList = () => {
+    let recipeWithId = recipes.filter((recipe) => {
+      return recipe.id == props.recipe.id;
+    });
+    if (recipeWithId.length > 0) {
+      dispatch(
+        removeRecipe({
+          id: parseInt(props.recipe.id),
+        })
+      );
+      setAlertMessage("Removed from list");
+    } else {
+      dispatch(
+        addRecipe({
+          id: parseInt(props.recipe.id),
+          ingredients: props.recipe.ingredients,
+        })
+      );
+      setAlertMessage("Added to list");
+    }
+  };
+
   return (
     <Fragment>
       {showModal && (
@@ -115,24 +143,36 @@ const CustomRecipeCard = (props) => {
       >
         <CardHeader
           action={
-            <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
-              <FavoriteIcon
-                sx={{
-                  cursor: "pointer",
-                  top: 0,
-                  right: 0,
-                  color: iconColor,
-                }}
-              />
-            </IconButton>
+            <CardActions disableSpacing>
+              <IconButton
+                aria-label="Add to grocery list"
+                onClick={addToGroceryList}
+              >
+                <ListAltIcon
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                />
+              </IconButton>
+              <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
+                <FavoriteIcon
+                  sx={{
+                    cursor: "pointer",
+                    top: 0,
+                    right: 0,
+                    color: iconColor,
+                  }}
+                />
+              </IconButton>
+            </CardActions>
           }
           title={props.recipe.title ? props.recipe.title : "No title"}
           subheader={
-            props.recipe.servings && props.recipe.nutrients.amount
+            props.recipe.servings
               ? "Servings: " +
                 props.recipe.servings +
                 " Calories: " +
-                Math.round(props.recipe.nutrition.nutrients.amount) +
+                Math.round(props.recipe.nutrients[0].amount) +
                 " Ready In: " +
                 props.recipe.readyInMinutes +
                 " minutes"

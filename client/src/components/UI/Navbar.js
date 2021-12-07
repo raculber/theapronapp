@@ -84,7 +84,27 @@ function Navbar(props) {
           )}
           {loggedIn && (
             <Link
+              to="/Profile"
+              onClick={() => setSelectedTab("profile")}
+              style={{
+                borderBottom:
+                  selectedTab === "profile"
+                    ? "3px solid rgb(0, 0, 0)"
+                    : "none",
+                color:
+                  selectedTab === "profile"
+                    ? "rgb(0, 0, 0)"
+                    : "rgb(92, 89, 89)",
+              }}
+            >
+              {" "}
+              Profile{" "}
+            </Link>
+          )}
+          {loggedIn && (
+            <Link
               to="/savedRecipes"
+              to="/SavedRecipes"
               onClick={() => setSelectedTab("saved-recipes")}
               style={{
                 borderBottom:
@@ -98,7 +118,7 @@ function Navbar(props) {
               }}
             >
               {" "}
-              Saved Recipes{" "}
+              Favorites{" "}
             </Link>
           )}
           {loggedIn && (
@@ -202,7 +222,7 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
-            to="/savedRecipes"
+            to="/SavedRecipes"
             onClick={() => setSelectedTab("saved-recipes")}
             style={{
               borderBottom:
@@ -216,11 +236,30 @@ function Navbar(props) {
             }}
           >
             {" "}
-            Saved Recipes{" "}
+            Favorites{" "}
           </Link>
         )}
         {loggedIn && (
           <Link
+            to="/Profile"
+            onClick={() => setSelectedTab("profile")}
+            style={{
+              borderBottom:
+                selectedTab === "profile"
+                  ? "3px solid rgb(0, 0, 0)"
+                  : "none",
+              color:
+                selectedTab === "profile"
+                ? "rgb(0, 0, 0)"
+                : "rgb(92, 89, 89)",
+          }}
+        >
+          {" "}
+          Profile{" "}
+        </Link>
+      )}
+        {loggedIn && (
+          <Link        
             to="/grocery-lists"
             onClick={() => setSelectedTab("grocery-lists")}
             style={{

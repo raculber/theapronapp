@@ -1,18 +1,16 @@
 import express from "express";
 
 import Ingredients from "../models/ingredients.js";
-
+import https from "https";
 const router = express.Router();
 
 export const deleteIngredient = async (req, res) => {
-  let { userId, ingredientId } = req.body;
-  console.log(userId);
-  console.log(ingredientId);
+  let { userId, name } = req.body;
 
   const ingredient = await Ingredients.findOne({
     userId: userId,
     ingredients: {
-      $elemMatch: { id: ingredientId },
+      $elemMatch: { name: name },
     },
   });
   //Delete if ingredient exists
@@ -23,7 +21,7 @@ export const deleteIngredient = async (req, res) => {
       {
         userId: userId,
       },
-      { $pull: { ingredients: { id: ingredientId } } }
+      { $pull: { ingredients: { name: name } } }
     );
     res.json({ message: "Ingredient deleted" });
     // ingredient.save();
@@ -35,16 +33,79 @@ export const getIngredients = async (req, res) => {
   const ingredients = await Ingredients.findOne({
     userId: userId,
   });
-  if (!ingredients) res.json({ message: "No ingredients saved " });
+  if (!ingredients) res.json({ ingredients: [] });
   else res.json({ ingredients: ingredients.ingredients });
 };
 
+export const getAutoComplete = async (req, res) => {
+  let query = req.query.query;
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/food/ingredients/autocomplete?apiKey=" +
+      process.env.API_KEY +
+      "&number=5&query=" +
+      query,
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ results: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401).json({ message: "Error completing query" });
+  });
+
+  request.end();
+};
+
+export const getRecommended = async (req, res) => {
+  let ingredients = req.query.ingredients;
+  console.log(ingredients);
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/recipes/findByIngredients?apiKey=" +
+      process.env.API_KEY +
+      "&number=10&ingredients=" +
+      ingredients,
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ results: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401).json({ message: "Error completing query" });
+  });
+
+  request.end();
+};
 export const addIngredient = async (req, res) => {
-  let { userId, ingredientId, ingredientName } = req.body;
+  let { userId, ingredientName, image } = req.body;
+  if (ingredientName == "") {
+    res.json({ message: "Error adding ingredient" });
+  }
+  const BASE_IMAGE_URL = "https://spoonacular.com/cdn/ingredients_100x100/";
+  image = BASE_IMAGE_URL + image;
   const ingredientExists = await Ingredients.exists({
     userId: userId,
     ingredients: {
-      $elemMatch: { id: ingredientId },
+      $elemMatch: { name: ingredientName },
     },
   });
   //Add ingredient
@@ -57,20 +118,19 @@ export const addIngredient = async (req, res) => {
     if (userIngredients == null) {
       userIngredients = new Ingredients({
         userId: userId,
-        ingredients: [{ id: ingredientId, name: ingredientName }],
+        ingredients: [{ name: ingredientName, image: image }],
       });
     } else
       userIngredients.ingredients.push({
-        id: ingredientId,
         name: ingredientName,
+        image: image,
       });
     userIngredients.save();
 
     res.status(200).json({
       data: {
-        ingredientId: ingredientId,
         ingredientName,
-        ingredientName,
+        image,
       },
     });
   } else {

@@ -19,7 +19,6 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
-
 export default function SignIn() {
   const history = createBrowserHistory({ forceRefresh: true });
   const dispatch = useDispatch();
@@ -69,6 +68,8 @@ export default function SignIn() {
             addUser({
               userId: res.data.result.userId,
               email: res.data.result.enteredEmail,
+              image:
+                "https://th.bing.com/th/id/R.8f185ac6c4a78763aa31acf73ee3e46b?rik=X7w93PUB4j3AXg&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_568656.png&ehk=YMUL5OvijifwVr2xWFpqoEf4STb07PZwQdnl0ispWMc%3d&risl=&pid=ImgRaw&r=0",
             })
           );
           setToken(res.data.token);
@@ -76,7 +77,6 @@ export default function SignIn() {
       })
       .catch((err) => console.log(err));
   };
-
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>

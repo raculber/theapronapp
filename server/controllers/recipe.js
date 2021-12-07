@@ -8,7 +8,7 @@ export const saveRecipe = async (req, res) => {
     userId,
     id,
     title,
-    extendedIngredients,
+    ingredients,
     vegetarian,
     vegan,
     glutenFree,
@@ -22,6 +22,7 @@ export const saveRecipe = async (req, res) => {
     readyInMinutes,
     servings,
   } = req.body;
+  console.log(ingredients);
   const recipeExists = await Recipe.exists({
     userId: userId,
     id: id,
@@ -32,7 +33,7 @@ export const saveRecipe = async (req, res) => {
       userId: userId,
       id: id,
       title: title,
-      extendedIngredients: extendedIngredients,
+      ingredients: ingredients,
       vegetarian: vegetarian,
       vegan: vegan,
       glutenFree: glutenFree,
@@ -46,6 +47,7 @@ export const saveRecipe = async (req, res) => {
       readyInMinutes: readyInMinutes,
       servings: servings,
     });
+
     recipe.save();
     res.json({ message: "Added to favorites" });
   }
@@ -78,7 +80,7 @@ export const getSavedRecipes = async (req, res) => {
   if (recipes.length > 0) {
     res.json({ recipes: recipes });
   } else {
-    res.json({ message: "No recipes saved" });
+    res.json({ recipes: [] });
   }
 };
 
@@ -92,6 +94,38 @@ export const getRandomRecipes = async (req, res) => {
       "&addRecipeNutrition=true&number=" +
       number +
       "&addRecipeInformation=true&instructionsRequired=true",
+    method: "GET",
+  };
+  const request = https.request(options, (response) => {
+    let data = "";
+    response.on("data", (chunk) => {
+      data = data + chunk.toString();
+    });
+
+    response.on("end", () => {
+      const body = JSON.parse(data);
+      res.json({ recipes: body });
+    });
+  });
+  request.on("error", (error) => {
+    res.status(401);
+  });
+
+  request.end();
+};
+
+export const getRecipeByName = async (req, res) => {
+  let name = req.query.name;
+  name = encodeURIComponent(name);
+  const options = {
+    hostname: "api.spoonacular.com",
+    path:
+      "/recipes/complexSearch?apiKey=" +
+      process.env.API_KEY +
+      "&addRecipeNutrition=true&number=1&addRecipeInformation=true" +
+      "&instructionsRequired=true" +
+      "&titleMatch=" +
+      name,
     method: "GET",
   };
   const request = https.request(options, (response) => {

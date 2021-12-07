@@ -25,7 +25,7 @@ const CustomRecipeModal = (props) => {
         style={{ margin: 10, fontSize: 20, color: "#808080" }}
       >
         Servings: {" " + props.recipe.servings} Calories:
-        {" " + Math.round(props.recipe.nutrients.amount) + " "}
+        {" " + Math.round(props.recipe.nutrients[0].amount) + " "}
         Ready In: {" " + Math.round(props.recipe.readyInMinutes) + " minutes"}
       </Typography>
       <div className={classes.imageAndSummary}>
