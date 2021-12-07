@@ -257,7 +257,7 @@ class Calendar extends React.Component {
               className="calendar-label"
               onClick={this.showMonth}
             >
-              {this.month()}, {this.state.selectedDay}
+              {this.month()}
             </span>
             <span className="calendar-label">{this.year()}</span>
             <span
