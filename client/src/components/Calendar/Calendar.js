@@ -113,10 +113,7 @@ class Calendar extends React.Component {
         const date = month + "/" + day + "/" + year;
         axios
           .get(
-            "http://localhost:3001/api/get-recipes-by-date?userId=" +
-              this.userId +
-              "&date=" +
-              date,
+            `${process.env.REACT_APP_API_SERVICE_URL}/api/get-recipes-by-date?userId=${this.userId}&date=${date}`,
             {
               headers: {
                 "access-token": localStorage.getItem("token"),
