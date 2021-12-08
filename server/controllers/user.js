@@ -54,11 +54,25 @@ export const createUser = async (req, res) => {
 
 export const updateUserPicture = async (req, res) => {
   let { userId, image } = req.body;
-  updatedUser = await User.updateOne({ userId: userId }, { image: image });
+  const updatedUser = await User.updateOne(
+    { userId: userId },
+    { image: image }
+  );
   if (!updatedUser) {
     res.json({ message: "Error updating image" });
   } else {
     res.json({ image: image });
+  }
+};
+
+export const getUserPicture = async (req, res) => {
+  console.log(req.query.userId);
+  let { userId } = req.query.userId;
+  console.log(userId);
+  const user = await User.findOne({ userId: req.query.userId });
+  console.log(user);
+  if (user) {
+    res.json({ image: user.image });
   }
 };
 

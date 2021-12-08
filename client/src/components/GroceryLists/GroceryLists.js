@@ -24,11 +24,14 @@ const GroceryLists = (props) => {
 
   const getGroceryLists = useCallback(() => {
     axios
-      .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-grocery-lists?userId=${userId}`, {
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-grocery-lists?userId=${userId}`,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
       .then((res) => {
         setGroceryLists(res.data.lists);
         setLoading(false);
@@ -42,8 +45,27 @@ const GroceryLists = (props) => {
     getGroceryLists();
   }, []);
 
+  const getUserPicture = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-user-picture?userId=${userId}`,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <Fragment>
+      <button onClick={getUserPicture}></button>
       {loading && (
         <CircularProgress sx={{ margin: "auto" }} color="secondary" />
       )}
