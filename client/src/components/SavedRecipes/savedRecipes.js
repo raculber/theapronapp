@@ -50,7 +50,7 @@ export default function SavedRecipes() {
     if (totalRecipes == null) {
       setLoading(true);
       axios
-        .get("http://localhost:3001/api/get-saved-recipes?userId=" + userId, {
+        .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-saved-recipes?userId=${userId}`, {
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -86,7 +86,7 @@ export default function SavedRecipes() {
 
   const createGroceryList = () => {
     axios
-      .post("http://localhost:3001/api/aggregate-grocery-lists", {
+      .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/aggregate-grocery-lists`, {
         userId: userId,
         recipes: groceryList,
         headers: {

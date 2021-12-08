@@ -24,7 +24,7 @@ const GroceryLists = (props) => {
 
   const getGroceryLists = useCallback(() => {
     axios
-      .get("http://localhost:3001/api/get-grocery-lists?userId=" + userId, {
+      .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-grocery-lists?userId=${userId}`, {
         headers: {
           "access-token": localStorage.getItem("token"),
         },

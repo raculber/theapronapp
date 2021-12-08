@@ -11,7 +11,7 @@ const GroceryList = (props) => {
   console.log(props.list.items);
   const deleteGroceryList = () => {
     axios
-      .delete("http://localhost:3001/api/delete-grocery-list", {
+      .delete(`${process.env.REACT_APP_API_SERVICE_URL}/api/delete-grocery-list`, {
         data: { userId: userId, name: props.list.name },
         headers: {
           "access-token": localStorage.getItem("token"),
