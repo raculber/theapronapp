@@ -1,0 +1,101 @@
+name: Deploy to Amazon ECS Production
+
+on:
+  push
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 310441857978.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPOSITORY_CLIENT: client
+  ECR_REPOSITORY_SERVER: server
+  ECS_CLUSTER: apron-cluster
+  ECS_SERVICE_CLIENT: client-svc
+  ECS_SERVICE_SERVER: server-svc
+  ECS_TASK_CLIENT: ./client-task-definition.json
+  ECS_TASK_SERVER: ./server-task-definition.json
+  CONTAINER_CLIENT: client
+  CONTAINER_SERVER: server
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push client image to Amazon ECR
+      id: build-image-client
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        CLIENT_IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -f client/Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$CLIENT_IMAGE_TAG --build-arg NODE_ENV=production ./client/
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$CLIENT_IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_CLIENT:$CLIENT_IMAGE_TAG"
+    
+    - name: Build, tag, and push server image to Amazon ECR
+      id: build-image-server
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        SERVER_IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -f server/Dockerfile.prod -t $ECR_REGISTRY/$ECR_REPOSITORY_SERVER:$SERVER_IMAGE_TAG ./server/
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY_SERVER:$SERVER_IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY_SERVER:$SERVER_IMAGE_TAG"
+    
+    - name: Download task definition for client
+      run: |
+        aws ecs describe-task-definition --task-definition client-td --query taskDefinition > client-task-definition.json
+    
+    - name: Download task definition for server
+      run: |
+        aws ecs describe-task-definition --task-definition server-td --query taskDefinition > server-task-definition.json
+    - name: Fill in the new image ID in the Amazon ECS task definition client
+      id: task-def-client
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_CLIENT }}
+        container-name: ${{ env.CONTAINER_CLIENT }}
+        image: ${{ steps.build-image-client.outputs.image }}
+    
+    - name: Fill in the new image ID in the Amazon ECS task definition server
+      id: task-def-server
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: ${{ env.ECS_TASK_SERVER }}
+        container-name: ${{ env.CONTAINER_SERVER }}
+        image: ${{ steps.build-image-server.outputs.image }}
+
+    - name: Deploy Amazon ECS task definition client
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def-client.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE_CLIENT }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
+    
+    - name: Deploy Amazon ECS task definition server
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task-def-server.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE_SERVER }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
