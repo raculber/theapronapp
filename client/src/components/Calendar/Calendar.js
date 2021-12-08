@@ -2,7 +2,6 @@ import React from "react";
 
 import moment from "moment";
 import CustomRecipeCard from "../Recipe/RecipeCard";
-import CalendarModal from "./CalendarModal";
 import axios from "axios";
 import recipe2 from "../Recipe/recipe2";
 import recipe from "../Recipe/recipe";
@@ -12,6 +11,7 @@ import RecipesByDay from "./RecipesByDay";
 import { Button } from "antd";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
+import CalendarModal from "./CalendarModal";
 
 class Calendar extends React.Component {
   userId = this.props.userId;
@@ -139,6 +139,36 @@ class Calendar extends React.Component {
     );
   };
 
+  onAddClicked = (d) => {
+    const year = this.state.dateObject._d.getFullYear();
+    let day = d;
+    if (day < 10) {
+      day = "0" + day;
+    }
+    const month = this.state.dateObject._d.getMonth() + 1;
+    const date = month + "/" + day + "/" + year;
+    axios
+      .get(
+        "http://localhost:3001/api/get-saved-recipes?userId=" + this.userId,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          selectedDay: d,
+          showModal: true,
+          selectedDate: date,
+          recipes: res.data.recipes,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   onPrev = () => {
     let curr = "";
     if (this.state.showYearTable) {
@@ -215,7 +245,10 @@ class Calendar extends React.Component {
       daysInMonth.push(
         <td key={d} className={`calendar-day ${currentDay}`}>
           <span onClick={() => this.onDayClick(d)}>{d}</span>
-          <IconButton aria-label="Add to calend">
+          <IconButton
+            aria-label="Add to calender"
+            onClick={() => this.onAddClicked(d)}
+          >
             <AddIcon
               sx={{
                 cursor: "pointer",
@@ -252,6 +285,7 @@ class Calendar extends React.Component {
 
     return (
       <div>
+        {this.state.showModal && <CalendarModal recipes={this.state.recipes} />}
         <div className="tail-datetime-calendar">
           {this.state.showModal && (
             <CalendarModal
