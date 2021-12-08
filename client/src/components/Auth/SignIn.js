@@ -52,8 +52,6 @@ export default function SignIn() {
       enteredEmail: data.get("email"),
       enteredPassword: data.get("password"),
     };
-    console.log(userInfo.enteredEmail);
-    console.log(userInfo.enteredPassword);
     axios
       .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/sign-in`, userInfo)
       .then((res) => {
