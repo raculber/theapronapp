@@ -1,7 +1,5 @@
 import React from "react";
-
 import moment from "moment";
-import CustomRecipeCard from "../Recipe/RecipeCard";
 import axios from "axios";
 import recipe2 from "../Recipe/recipe2";
 import recipe from "../Recipe/recipe";

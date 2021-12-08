@@ -19,20 +19,22 @@ import axios from "axios";
 
 const SavedCalendarDisplayRecipeCard = (props) => {
   const userId = useSelector((state) => state.user.userId);
+  // const RecipeId = useSelector((state) => state.recipe.recipeId);
+  //   const Date = useSelector((state) => state.recipe.date);
   const [alertMessage, setAlertMessage] = useState("");
   const [iconColor, setIconColor] = useState("#A9A9A9");
-  console.log(props.date);
 
-  const deleteRecipe = () => {
+  const deleteRecipe = (props) => {
+    console.log(userId);
+    console.log(props.date);
+    console.log(props.recipeId);
     axios
       .delete(
         `${process.env.REACT_APP_API_SERVICE_URL}/api/delete-recipe-from-date`,
         {
-          data: {
-            userId: userId,
-            date: props.date,
-            recipeId: props.recipeId,
-          },
+          userId: userId,
+          date: props.date,
+          recipeId: props.recipeId,
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -40,6 +42,7 @@ const SavedCalendarDisplayRecipeCard = (props) => {
       )
       .then((res) => {
         console.log(res);
+        setAlertMessage("Deleted from calendar");
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +68,7 @@ const SavedCalendarDisplayRecipeCard = (props) => {
         <CardHeader
           action={
             <CardActions disableSpacing>
-              <IconButton aria-label="Delete card">
+              <IconButton aria-label="Delete card" onClick={deleteRecipe}>
                 <DeleteIcon
                   sx={{
                     cursor: "pointer",
