@@ -9,8 +9,8 @@ env:
   ECR_REPOSITORY_CLIENT: client
   ECR_REPOSITORY_SERVER: server
   ECS_CLUSTER: apron-cluster
-  ECS_SERVICE_CLIENT: client-svc
-  ECS_SERVICE_SERVER: server-svc
+  ECS_SERVICE_CLIENT: client-sv
+  ECS_SERVICE_SERVER: server-sv
   ECS_TASK_CLIENT: ./client-task-definition.json
   ECS_TASK_SERVER: ./server-task-definition.json
   CONTAINER_CLIENT: client
@@ -68,6 +68,7 @@ jobs:
     - name: Download task definition for server
       run: |
         aws ecs describe-task-definition --task-definition server-td --query taskDefinition > server-task-definition.json
+    
     - name: Fill in the new image ID in the Amazon ECS task definition client
       id: task-def-client
       uses: aws-actions/amazon-ecs-render-task-definition@v1
