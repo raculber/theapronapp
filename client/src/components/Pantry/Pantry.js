@@ -38,12 +38,18 @@ const Pantry = () => {
   const [recipes, setRecipes] = useState(
     useSelector((state) => state.pantry.recipes)
   );
+  const [allNull, setAllNull] = useState(
+    recipes.every(function (v) {
+      return v === null;
+    })
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
+    if (allNull) dispatch(clearRecipes());
     console.log("In use effect");
     axios
       .get(
@@ -61,7 +67,7 @@ const Pantry = () => {
         console.log(err);
       });
   }, []);
-  console.log(window.innerWidth);
+  console.log(recipes);
   const removeIngredient = (name) => {
     console.log("Remove");
     console.log(name);
@@ -192,9 +198,12 @@ const Pantry = () => {
             )
             .then((res) => {
               if (res.data.recipes) {
-                if (res.data.recipes.results.length > 0)
+                if (res.data.recipes.results.length > 0) {
                   newRecipes.push(res.data.recipes.results[0]);
-                dispatch(addRecipe(res.data.recipes.results[0]));
+                  setRecipes(newRecipes);
+                  setAllNull(false);
+                  dispatch(addRecipe(res.data.recipes.results[0]));
+                }
               }
             })
             .catch((err) => {
@@ -305,11 +314,13 @@ const Pantry = () => {
           )}
         </List>
 
-        <div className="recipes">
-          {recipes.map((recipe) => (
-            <RecipeCard recipe={recipe} />
-          ))}
-        </div>
+        {!allNull && (
+          <div className="recipes">
+            {recipes.map((recipe) => (
+              <RecipeCard recipe={recipe} />
+            ))}
+          </div>
+        )}
       </div>
       <Snackbar
         open={error !== ""}

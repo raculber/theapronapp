@@ -39,7 +39,7 @@ const RecipeCard = (props) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [props.recipe.id, userId]);
+  }, [props.recipe.id]);
   useEffect(() => {
     getRecipeSaved();
   }, [getRecipeSaved]);
