@@ -9,6 +9,9 @@ import recipe from "../Recipe/recipe";
 import { connect } from "react-redux";
 import "./Calendar.css";
 import RecipesByDay from "./RecipesByDay";
+import { Button } from "antd";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
 
 class Calendar extends React.Component {
   userId = this.props.userId;
@@ -211,9 +214,18 @@ class Calendar extends React.Component {
 
       daysInMonth.push(
         <td key={d} className={`calendar-day ${currentDay}`}>
-          <span onClick={() => this.onDayClick(d)}>
-            {d}, {currentMonth} , {currentYear}
-          </span>
+          <span onClick={() => this.onDayClick(d)}>{d}</span>
+          <IconButton aria-label="Add to calend">
+            <AddIcon
+              sx={{
+                cursor: "pointer",
+                zIndex: 100,
+                top: 0,
+                right: 0,
+                position: "relative",
+              }}
+            />
+          </IconButton>
         </td>
       );
     }

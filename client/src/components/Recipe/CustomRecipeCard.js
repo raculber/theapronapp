@@ -10,6 +10,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Snackbar } from "@mui/material";
 import { Alert } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import TodayIcon from "@mui/icons-material/Today";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
@@ -167,6 +168,7 @@ const CustomRecipeCard = (props) => {
                   }}
                 />
               </IconButton>
+
               <IconButton aria-label="Save recipe" onClick={recipeSaveHandler}>
                 <FavoriteIcon
                   sx={{
