@@ -1,4 +1,5 @@
 import "./RecipesByDay.css";
+import SavedCalendarDisplayRecipeCard from "../Recipe/SavedCalendarDisplayRecipeCard";
 import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { Typography } from "@mui/material";
 const RecipesByDay = (props) => {
@@ -9,7 +10,7 @@ const RecipesByDay = (props) => {
       </Typography>
       <div className="recipes">
         {props.recipes.map((recipe) => (
-          <CustomRecipeCard recipe={recipe} key={recipe.id} />
+          <SavedCalendarDisplayRecipeCard recipe={recipe} key={recipe.id} />
         ))}
       </div>
     </div>
