@@ -1,12 +1,16 @@
 import Modal from "../UI/Modal";
-import CustomRecipeCard from "../Recipe/CustomRecipeCard";
+import CalendarRecipeCard from "../Recipe/CalendarRecipeCard";
 import "./CalendarModal.css";
 const CalendarModal = (props) => {
   return (
     <Modal onClose={props.onClose}>
       <div className="modal">
         {props.recipes.map((recipe) => (
-          <CustomRecipeCard recipe={recipe} key={recipe.id} />
+          <CalendarRecipeCard
+            recipe={recipe}
+            date={props.date}
+            key={recipe.id}
+          />
         ))}
       </div>
     </Modal>

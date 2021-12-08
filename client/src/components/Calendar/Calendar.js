@@ -288,6 +288,7 @@ class Calendar extends React.Component {
             <CalendarModal
               onClose={this.hideModal}
               recipes={this.state.recipes}
+              date={this.state.selectedDate}
             />
           )}
           <div className="calendar-navi">

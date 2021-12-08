@@ -6,7 +6,6 @@ import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import IconButton from "@mui/material/IconButton";
-import TodayIcon from "@mui/icons-material/Today";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import veganIcon from "../../images/vegan-icon.jpg";
 import glutenFreeIcon from "../../images/gluten_free.jpg";
@@ -19,51 +18,35 @@ import TodayIcon from "@mui/icons-material/Today";
 import axios from "axios";
 
 const CalendarRecipeCard = (props) => {
-  const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const recipes = useSelector((state) => state.groceryList.recipes);
   const [iconColor, setIconColor] = useState("#A9A9A9");
-  const [shoppingCartColor, setShoppingCartColor] = useState("#000000");
 
-  const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.userId);
-  const getRecipeSaved = useCallback(() => {
+  console.log(props.date);
+
+  const addToDate = () => {
     axios
-      .get(
-        "http://localhost:3001/api/get-recipe-saved?id=" +
-          props.recipe.id +
-          "&userId=" +
-          userId,
-        {
-          headers: {
-            "access-token": localStorage.getItem("token"),
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/add-recipe-to-date`, {
+        userId: userId,
+        date: props.date,
+        recipe: props.recipe,
+        headers: {
+          "access-token": localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
-        setIconColor(res.data.recipeExists ? "#FF0000" : "#A9A9A9");
+        console.log(res);
+        setAlertMessage("Added to calendar");
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [props.recipe.id, userId]);
-
-  const hideModalHandler = () => {
-    setShowModal(false);
-  };
-  const showModalHandler = (event) => {
-    //Do not display modal if user clicked "save"
-    if (event.target.tagName !== "path") setShowModal(true);
   };
 
   return (
     <Fragment>
-      {showModal && (
-        <CustomRecipeModal onClose={hideModalHandler} recipe={props.recipe} />
-      )}
       <Card
         className="card"
-        onClick={showModalHandler}
         sx={{
           maxWidth: 330,
           cursor: "pointer",
@@ -79,10 +62,7 @@ const CalendarRecipeCard = (props) => {
         <CardHeader
           action={
             <CardActions disableSpacing>
-              <IconButton
-                aria-label="Add to grocery list"
-                onClick={addToGroceryList}
-              >
+              <IconButton aria-label="Add to date" onClick={addToDate}>
                 <TodayIcon
                   sx={{
                     cursor: "pointer",
