@@ -18,10 +18,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 const SavedCalendarDisplayRecipeCard = (props) => {
+  const userId = useSelector((state) => state.user.userId);
   const [alertMessage, setAlertMessage] = useState("");
   const [iconColor, setIconColor] = useState("#A9A9A9");
-
-  const userId = useSelector((state) => state.user.userId);
   console.log(props.date);
 
   const deleteRecipe = () => {
@@ -31,8 +30,8 @@ const SavedCalendarDisplayRecipeCard = (props) => {
         {
           data: {
             userId: userId,
-            date: dateRef.current.value,
-            recipeId: recipe.id,
+            date: props.date,
+            recipeId: props.recipeId,
           },
           headers: {
             "access-token": localStorage.getItem("token"),
@@ -66,7 +65,7 @@ const SavedCalendarDisplayRecipeCard = (props) => {
         <CardHeader
           action={
             <CardActions disableSpacing>
-              <IconButton aria-label="Delete card" onClick={addToDate}>
+              <IconButton aria-label="Delete card">
                 <DeleteIcon
                   sx={{
                     cursor: "pointer",

@@ -1,5 +1,5 @@
 import "./RecipesByDay.css";
-import SavedCalendarDisplayRecipeCard from "../Recipe/CustomRecipeCard";
+import SavedCalendarDisplayRecipeCard from "../Recipe/SavedCalendarDisplayRecipeCard";
 import CustomRecipeCard from "../Recipe/CustomRecipeCard";
 import { Typography } from "@mui/material";
 const RecipesByDay = (props) => {
