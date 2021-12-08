@@ -38,7 +38,7 @@ const Home = () => {
     if (totalRecipes.length === 0) {
       setLoading(true);
       axios
-        .get("http://localhost:3001/api/get-random-recipes?number=100")
+        .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-random-recipes?number=100`)
         .then((res) => {
           setTotalRecipes(res.data.recipes.results);
           setRecipes(res.data.recipes.results.slice(0, 20));
@@ -100,10 +100,7 @@ const Home = () => {
     }
     axios
       .get(
-        "http://localhost:3001/api/get-recipes-by-query?number=100&search=" +
-          query +
-          dietFilter +
-          intoleranceFilter
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-recipes-by-query?number=100&search=${query}${dietFilter}${intoleranceFilter}`
       )
       .then((res) => {
         setTotalRecipes(res.data.recipes.results);

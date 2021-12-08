@@ -26,10 +26,7 @@ const RecipeCard = (props) => {
   const getRecipeSaved = useCallback(() => {
     axios
       .get(
-        "http://localhost:3001/api/get-recipe-saved?id=" +
-          props.recipe.id +
-          "&userId=" +
-          userId,
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-recipe-saved?id=${props.recipe.id}&userId=${userId}`,
         {
           headers: {
             "access-token": localStorage.getItem("token"),
@@ -62,7 +59,7 @@ const RecipeCard = (props) => {
       });
     });
     axios
-      .post("http://localhost:3001/api/save-recipe", {
+      .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/save-recipe`, {
         userId: userId,
         id: props.recipe.id,
         title: props.recipe.title,

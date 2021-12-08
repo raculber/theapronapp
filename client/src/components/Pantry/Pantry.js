@@ -41,7 +41,7 @@ const Pantry = () => {
   useEffect(() => {
     console.log("In use effect");
     axios
-      .get("http://localhost:3001/api/get-ingredients?userId=" + userId, {
+      .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-ingredients?userId=${userId}`, {
         headers: {
           "access-token": localStorage.getItem("token"),
         },
@@ -58,7 +58,7 @@ const Pantry = () => {
     console.log("Remove");
     console.log(name);
     axios
-      .delete("http://localhost:3001/api/delete-ingredient", {
+      .delete(`${process.env.REACT_APP_API_SERVICE_URL}/api/delete-ingredient`, {
         data: { userId: userId, name: name },
         headers: {
           "access-token": localStorage.getItem("token"),
@@ -81,7 +81,7 @@ const Pantry = () => {
   const addIngredient = () => {
     console.log(selectedIngredient);
     axios
-      .post("http://localhost:3001/api/add-ingredient", {
+      .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/add-ingredient`, {
         userId: userId,
         ingredientName: selectedIngredient.name,
         image: selectedIngredient.image,
@@ -132,8 +132,7 @@ const Pantry = () => {
     if (event.type !== "blur") {
       axios
         .get(
-          "http://localhost:3001/api/autocomplete-ingredient-search?query=" +
-            value,
+          `${process.env.REACT_APP_API_SERVICE_URL}/api/autocomplete-ingredient-search?query=${value}`,
           {
             headers: {
               "access-token": localStorage.getItem("token"),
@@ -159,8 +158,7 @@ const Pantry = () => {
       .join(",");
     axios
       .get(
-        "http://localhost:3001/api/get-recommended?ingredients=" +
-          commaSeperatedIngredients,
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-recommended?ingredients=${commaSeperatedIngredients}`,
         {
           headers: {
             "access-token": localStorage.getItem("token"),
@@ -173,8 +171,7 @@ const Pantry = () => {
         res.data.results.forEach((recipe) => {
           axios
             .get(
-              "http://localhost:3001/api/get-recipe-by-name?name=" +
-                recipe.title,
+              `${process.env.REACT_APP_API_SERVICE_URL}/api/get-recipe-by-name?name=${recipe.title}`,
               {
                 headers: {
                   "access-token": localStorage.getItem("token"),

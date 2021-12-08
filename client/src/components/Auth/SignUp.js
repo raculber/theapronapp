@@ -32,7 +32,7 @@ export default function SignUp() {
     localStorage.setItem("token", token);
     if (token !== "") {
       axios
-        .get("http://localhost:3001/api/auth", {
+        .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/auth`, {
           headers: {
             "access-token": localStorage.getItem("token"),
           },
@@ -60,7 +60,7 @@ export default function SignUp() {
     // eslint-disable-next-line no-console
     console.log(userInfo);
     axios
-      .post("http://localhost:3001/api/sign-up", userInfo)
+      .post(`${process.env.REACT_APP_API_SERVICE_URL}/api/sign-up`, userInfo)
       .then((res) => {
         // res.data.message will contain necessary info about why
         // sign up/in failed
