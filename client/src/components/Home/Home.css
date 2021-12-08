@@ -3,7 +3,7 @@
   flex-direction: column;
   flex-wrap: wrap;
 }
-.recipes {
+.home-recipes {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
