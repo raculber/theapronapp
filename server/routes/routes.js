@@ -37,6 +37,11 @@ import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
+// health check
+router.get("/ping", (req, res) => {
+  res.status(200).send("pong!");
+});
+
 router.post("/api/sign-up", createUser);
 router.post("/api/sign-in", signInUser);
 router.put("/api/update-user-picture", auth, updateUserPicture);
