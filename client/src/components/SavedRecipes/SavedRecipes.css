@@ -18,6 +18,8 @@
   }
 }
 .saved-recipes {
+  margin-left: 400px;
+  margin-top: -300px;
   display: flex;
   flex-direction: column;
 }

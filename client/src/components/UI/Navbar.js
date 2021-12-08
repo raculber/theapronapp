@@ -88,9 +88,7 @@ function Navbar(props) {
               onClick={() => setSelectedTab("profile")}
               style={{
                 borderBottom:
-                  selectedTab === "profile"
-                    ? "3px solid rgb(0, 0, 0)"
-                    : "none",
+                  selectedTab === "profile" ? "3px solid rgb(0, 0, 0)" : "none",
                 color:
                   selectedTab === "profile"
                     ? "rgb(0, 0, 0)"
@@ -99,26 +97,6 @@ function Navbar(props) {
             >
               {" "}
               Profile{" "}
-            </Link>
-          )}
-          {loggedIn && (
-            <Link
-              to="/savedRecipes"
-              to="/SavedRecipes"
-              onClick={() => setSelectedTab("saved-recipes")}
-              style={{
-                borderBottom:
-                  selectedTab === "saved-recipes"
-                    ? "3px solid rgb(0, 0, 0)"
-                    : "none",
-                color:
-                  selectedTab === "saved-recipes"
-                    ? "rgb(0, 0, 0)"
-                    : "rgb(92, 89, 89)",
-              }}
-            >
-              {" "}
-              Favorites{" "}
             </Link>
           )}
           {loggedIn && (
@@ -222,44 +200,21 @@ function Navbar(props) {
         )}
         {loggedIn && (
           <Link
-            to="/SavedRecipes"
-            onClick={() => setSelectedTab("saved-recipes")}
-            style={{
-              borderBottom:
-                selectedTab === "saved-recipes"
-                  ? "3px solid rgb(0, 0, 0)"
-                  : "none",
-              color:
-                selectedTab === "saved-recipes"
-                  ? "rgb(0, 0, 0)"
-                  : "rgb(92, 89, 89)",
-            }}
-          >
-            {" "}
-            Favorites{" "}
-          </Link>
-        )}
-        {loggedIn && (
-          <Link
             to="/Profile"
             onClick={() => setSelectedTab("profile")}
             style={{
               borderBottom:
-                selectedTab === "profile"
-                  ? "3px solid rgb(0, 0, 0)"
-                  : "none",
+                selectedTab === "profile" ? "3px solid rgb(0, 0, 0)" : "none",
               color:
-                selectedTab === "profile"
-                ? "rgb(0, 0, 0)"
-                : "rgb(92, 89, 89)",
-          }}
-        >
-          {" "}
-          Profile{" "}
-        </Link>
-      )}
+                selectedTab === "profile" ? "rgb(0, 0, 0)" : "rgb(92, 89, 89)",
+            }}
+          >
+            {" "}
+            Profile{" "}
+          </Link>
+        )}
         {loggedIn && (
-          <Link        
+          <Link
             to="/grocery-lists"
             onClick={() => setSelectedTab("grocery-lists")}
             style={{
