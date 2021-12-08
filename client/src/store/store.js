@@ -11,17 +11,19 @@ import {
 } from "redux-persist";
 import authSlice from "./auth-slice";
 import groceryListSlice from "./grocery-list";
+import pantrySlice from "./pantry";
 import storage from "redux-persist/lib/storage";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user", "groceryList"],
+  whitelist: ["user", "groceryList", "pantry"],
 };
 
 const rootReducer = combineReducers({
   user: authSlice.reducer,
   groceryList: groceryListSlice.reducer,
+  pantry: pantrySlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
@@ -15,6 +15,8 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import CircularProgress from "@mui/material/CircularProgress";
+import { clearRecipes } from "../../store/pantry";
+import { addRecipe } from "../../store/pantry";
 import recipe2 from "../Recipe/recipe2";
 import recipe from "../Recipe/recipe";
 import "./Pantry.css";
@@ -33,19 +35,25 @@ const Pantry = () => {
     image: "",
   });
   const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState(
+    useSelector((state) => state.pantry.recipes)
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const forceUpdate = useForceUpdate();
 
   useEffect(() => {
     console.log("In use effect");
     axios
-      .get(`${process.env.REACT_APP_API_SERVICE_URL}/api/get-ingredients?userId=${userId}`, {
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
+      .get(
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/get-ingredients?userId=${userId}`,
+        {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
       .then((res) => {
         setIngredients(res.data.ingredients);
       })
@@ -58,12 +66,15 @@ const Pantry = () => {
     console.log("Remove");
     console.log(name);
     axios
-      .delete(`${process.env.REACT_APP_API_SERVICE_URL}/api/delete-ingredient`, {
-        data: { userId: userId, name: name },
-        headers: {
-          "access-token": localStorage.getItem("token"),
-        },
-      })
+      .delete(
+        `${process.env.REACT_APP_API_SERVICE_URL}/api/delete-ingredient`,
+        {
+          data: { userId: userId, name: name },
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
         if (res.data.message == "Ingredient deleted") {
@@ -151,6 +162,7 @@ const Pantry = () => {
 
   const getRecommendedRecipes = () => {
     setLoading(true);
+    dispatch(clearRecipes());
     let commaSeperatedIngredients = ingredients
       .map(function (elem) {
         return elem.name;
@@ -167,7 +179,7 @@ const Pantry = () => {
       )
       .then((res) => {
         console.log(res);
-        let recipes = [];
+        let newRecipes = [];
         res.data.results.forEach((recipe) => {
           axios
             .get(
@@ -181,15 +193,16 @@ const Pantry = () => {
             .then((res) => {
               if (res.data.recipes) {
                 if (res.data.recipes.results.length > 0)
-                  recipes.push(res.data.recipes.results[0]);
+                  newRecipes.push(res.data.recipes.results[0]);
+                dispatch(addRecipe(res.data.recipes.results[0]));
               }
             })
             .catch((err) => {
               console.log(err);
             });
         });
-        console.log(recipes);
-        setRecipes(recipes);
+        console.log(newRecipes);
+        setRecipes(newRecipes);
         setLoading(false);
       })
       .catch((err) => {
