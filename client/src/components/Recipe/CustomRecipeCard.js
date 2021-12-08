@@ -26,7 +26,7 @@ const CustomRecipeCard = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const recipes = useSelector((state) => state.groceryList.recipes);
-  const [iconColor, setIconColor] = useState("#A9A9A9");
+  const [iconColor, setIconColor] = useState("#FF0000");
   const [shoppingCartColor, setShoppingCartColor] = useState("#000000");
 
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const CustomRecipeCard = (props) => {
         }
       )
       .then((res) => {
+        console.log(res);
         setIconColor(res.data.recipeExists ? "#FF0000" : "#A9A9A9");
       })
       .catch((err) => {
@@ -57,9 +58,9 @@ const CustomRecipeCard = (props) => {
     }
   }, []);
   useEffect(() => {
-    getRecipeSaved();
+    // getRecipeSaved();
     getRecipeInCart();
-  }, [getRecipeSaved, getRecipeInCart]);
+  }, [getRecipeInCart]);
 
   const alertClosedHandler = () => {
     setAlertMessage("");
